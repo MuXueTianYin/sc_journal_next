@@ -112,6 +112,19 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+
+/* globals.css */
+@media (max-width: 1023px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  /* 防止内容滚动穿透 */
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

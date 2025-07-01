@@ -1,4 +1,5 @@
 // components/doc/Sidebar.tsx
+"use client"
 import {
     Accordion,
     AccordionContent,
