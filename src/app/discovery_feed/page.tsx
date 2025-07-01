@@ -2,7 +2,7 @@
 import PostCard from '@/components/layout/PostCard';
 import MainNav from '@/components/layout/MainNav';
 // import BottomNav from '@/components/layout/BottomNav';
-
+import { getImagePath } from '@/utils/pathUtils';
 
 const navItems = [
     {id: 1, name: "推荐"},
@@ -71,7 +71,7 @@ const posts = [
         comments: 21,
         tags: ["恋爱日常", "情侣打卡"],
         coverColor: "bg-gradient-to-r from-pink-100 to-purple-100",
-        imageUrl: "/assets/cc/IMG20250524180948.jpg",
+        imageUrl: getImagePath("/assets/cc/IMG20250524180948.jpg"),
     },
     {
         id: 2,
@@ -82,7 +82,7 @@ const posts = [
         comments: 245,
         tags: ["恋爱段位", "情侣日常"],
         coverColor: "bg-gradient-to-r from-blue-100 to-cyan-100",
-        imageUrl: "/assets/cc/IMG_20250617_001231.jpg",
+        imageUrl: getImagePath("/assets/cc/IMG_20250617_001231.jpg"),
     },
     {
         id: 3,
@@ -93,7 +93,7 @@ const posts = [
         comments: 1204,
         tags: ["恋爱趣事", "男友日常"],
         coverColor: "bg-gradient-to-r from-purple-100 to-pink-100",
-        imageUrl: "/assets/cc/IMG_20250617_002505.jpg",
+        imageUrl: getImagePath("/assets/cc/IMG_20250617_002505.jpg"),
     },
     {
         id: 4,
@@ -104,7 +104,7 @@ const posts = [
         comments: 8,
         tags: ["情侣开发", "创意礼物"],
         coverColor: "bg-gradient-to-r from-yellow-100 to-orange-100",
-        imageUrl: "/assets/cc/IMG_20250620_092648.jpg",
+        imageUrl: getImagePath("/assets/cc/IMG_20250620_092648.jpg"),
     },
     {
         id: 5,
@@ -115,7 +115,7 @@ const posts = [
         comments: 8,
         tags: ["科技恋爱", "情侣日常"],
         coverColor: "bg-gradient-to-r from-yellow-100 to-orange-100",
-        imageUrl: "/assets/cc/3F77F5AF_IMG_5670.jpg",
+        imageUrl: getImagePath("/assets/cc/3F77F5AF_IMG_5670.jpg"),
     },
     {
         id: 6,
@@ -126,7 +126,7 @@ const posts = [
         comments: 8,
         tags: ["恋爱技巧", "情侣日常"],
         coverColor: "bg-gradient-to-r from-yellow-100 to-orange-100",
-        imageUrl: "/assets/cc/IMG20250524191450.jpg",
+        imageUrl: getImagePath("/assets/cc/IMG20250524191450.jpg"),
     },
     {
         id: 7,
@@ -137,7 +137,7 @@ const posts = [
         comments: 8,
         tags: ["程序员恋爱", "创意表白"],
         coverColor: "bg-gradient-to-r from-yellow-100 to-orange-100",
-        imageUrl: "/assets/cc/IMG20250614133856.jpg",
+        imageUrl: getImagePath("/assets/cc/IMG20250614133856.jpg"),
     },
     {
         id: 8,
@@ -148,7 +148,7 @@ const posts = [
         comments: 8,
         tags: ["情侣旅行", "浪漫计划"],
         coverColor: "bg-gradient-to-r from-yellow-100 to-orange-100",
-        imageUrl: "/assets/cc/IMG20250614164551.jpg",
+        imageUrl: getImagePath("/assets/cc/IMG20250614164551.jpg"),
     },
 ];
 

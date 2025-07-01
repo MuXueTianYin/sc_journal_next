@@ -1,58 +1,119 @@
 "use client"
 
-// import { useState } from 'react';
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {useRouter} from "next/navigation";
 
-// import Image from 'next/image';
-
 export default function Home() {
-    // const [activeTab, setActiveTab] = useState('features');
     const router = useRouter();
-    const features = [
+    const [daysInLove, setDaysInLove] = useState(0);
+    const [hoursInLove, setHoursInLove] = useState(0);
+    const [minutesInLove, setMinutesInLove] = useState(0);
+    const [loveNote, setLoveNote] = useState('');
+    const [loveNotes, setLoveNotes] = useState<string[]>([]);
+
+    // 设置恋爱开始日期 - 2025年5月24日
+    // const loveStartDate = new Date(2025, 4, 24); // 注意：月份是从0开始的，所以5月是4
+
+    useEffect(() => {
+        // 1. 创建起始时间（2025-05-24 UTC）
+        const loveStartDate = new Date(Date.UTC(2025, 4, 24));
+
+        const calculateLoveTime = () => {
+            // 2. 获取当前UTC时间戳
+            const nowUTC = Date.now();
+
+            // 3. 计算毫秒差
+            const diffMs = nowUTC - loveStartDate.getTime();
+
+            // 4. 精准计算时间（一次性推导）
+            // const totalSeconds = Math.floor(diffMs / 1000);
+
+            const days = diffMs / (1000 * 60 * 60 * 24); // ≈38.23天
+            const hours = days * 24;
+            const minutes = hours * 60;
+            setDaysInLove(Math.floor(days));
+            setHoursInLove(Math.floor(hours));
+            setMinutesInLove(Math.floor(minutes));
+        };
+
+        calculateLoveTime();
+        // 每秒更新保证实时性
+        const timer = setInterval(calculateLoveTime, 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    // 添加爱的留言
+    const handleAddLoveNote = () => {
+        if (loveNote.trim()) {
+            setLoveNotes([...loveNotes, loveNote]);
+            setLoveNote('');
+        }
+    };
+
+    // 爱情里程碑数据
+    const milestones = [
         {
-            icon: '📝',
-            title: '心动瞬间',
-            description: '记录每一次心跳加速的相遇，每一句甜蜜的对话'
+            date: '2025年4月26日',
+            title: '初遇',
+            description: '阴差阳错的一起听，开启了我们奇妙的缘分',
+            icon: '🎧'
         },
         {
-            icon: '🖼️',
-            title: '回忆相册',
-            description: '珍藏那些让你嘴角上扬的合影和特别的时刻'
+            date: '2025年5月17日',
+            title: '香港初会',
+            description: '命运安排我们再次相遇，在喧闹的街头听见心跳',
+            icon: '🇭🇰'
         },
         {
-            icon: '📅',
-            title: '爱情日历',
-            description: '标记所有重要的日子：相识日、初吻日、纪念日'
+            date: '2025年5月24日',
+            title: '深圳定情',
+            description: '宝安摩天轮下的日落，牵起的手再也不愿放开',
+            icon: '🎡'
         },
         {
-            icon: '💌',
-            title: '情书信箱',
-            description: '写下那些当面说不出口的悄悄话和真心话'
+            date: '2025年6月5日',
+            title: '深夜陪伴',
+            description: '陪你复习到凌晨两点，看到你努力的样子',
+            icon: '📚'
         },
         {
-            icon: '🗺️',
-            title: '恋爱地图',
-            description: '标记一起去过的地方，计划未来的浪漫旅行'
+            date: '2025年6月11日',
+            title: '考试后的约会',
+            description: '互相收到对方的小惊喜，一起拍了很多照片，进行了烛光晚餐，还去了迪士尼',
+            icon: '📚'
         },
         {
-            icon: '🔐',
-            title: '私密空间',
-            description: '仅属于我们两人的小天地，安全加密的甜蜜空间'
+            date: '2025年6月15日',
+            title: '第一次小矛盾',
+            description: '抖音的小误会让我们更懂得沟通的重要',
+            icon: '💬'
+        },
+        {
+            date: '未来',
+            title: '永恒计划',
+            description: '一起规划属于我们的美好未来',
+            icon: '✨'
         }
     ];
 
+    // 爱情数据统计
     const stats = [
-        { label: '相识天数', value: '66' },
-        { label: '心动时刻', value: '100+' },
-        { label: '约会次数', value: '3' },
+        { label: '相恋天数', value: daysInLove },
+        { label: '想你次数', value: '∞' },
+        { label: '心动时刻', value: 100 },
         { label: '未来计划', value: '永远' },
     ];
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100">
             <Head>
-                <title>澄心相印 | 我们的爱情空间</title>
+                <title>澄心相印 | 我们的爱情日志</title>
                 <meta name="description" content="记录我们爱情点滴的私密空间" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -72,19 +133,19 @@ export default function Home() {
 
                         <div className="hidden md:flex space-x-8">
                             <a href="#" className="text-gray-600 hover:text-rose-500 font-medium">爱的首页</a>
-                            <a href="#" className="text-gray-600 hover:text-rose-500 font-medium">心动瞬间</a>
-                            <a href="#" className="text-gray-600 hover:text-rose-500 font-medium">回忆相册</a>
+                            <a href="#" className="text-gray-600 hover:text-rose-500 font-medium">恋爱日记</a>
+                            <a href="#" className="text-gray-600 hover:text-rose-500 font-medium">甜蜜相册</a>
                             <a href="#" className="text-gray-600 hover:text-rose-500 font-medium">情书信箱</a>
                             <a href="#" className="text-gray-600 hover:text-rose-500 font-medium">恋爱地图</a>
                         </div>
 
                         <div className="flex items-center space-x-4">
-                            <div className="hidden md:flex items-center px-3 py-1 bg-rose-50 rounded-md border border-rose-100">
-                                <span className="text-rose-500 font-semibold">v1.0.0</span>
-                            </div>
-                            <button className="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 transition">
+                            <Button
+                                className="bg-rose-500 hover:bg-rose-600 text-white"
+                                onClick={() => router.push('/docs')}
+                            >
                                 写新日记 →
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -97,11 +158,11 @@ export default function Home() {
                     <div className="max-w-4xl mx-auto">
                         <div className="inline-flex items-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100 mb-4">
                             <span className="bg-rose-500 h-2 w-2 rounded-full mr-2"></span>
-                            <span className="text-rose-500 font-medium">新版甜蜜上线 v1.0.0</span>
+                            <span className="text-rose-500 font-medium">今日恋爱小贴士：爱是相互理解与包容</span>
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-                            记录我们<span className="text-rose-500">爱的旅程</span>
+                            我们的恋爱旅程已持续 <span className="text-rose-500">{daysInLove}</span> 天
                         </h1>
 
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10">
@@ -109,154 +170,148 @@ export default function Home() {
                         </p>
 
                         <div className="flex justify-center space-x-4">
-                            <button className="bg-rose-500 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-rose-600 transition" onClick={()=>{router.push('/discovery_feed')}}>
-                                写新日记 →
-                            </button>
-                            <button className="bg-white border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-50 transition">
-                                查看回忆
-                            </button>
+                            <Button
+                                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-6 text-lg"
+                                onClick={() => router.push('/discovery_feed')}
+                            >
+                                记录今日心动 →
+                            </Button>
+                            <Button
+                                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-6 text-lg"
+                                variant="outline"
+                            >
+                                查看甜蜜相册
+                            </Button>
                         </div>
                     </div>
                 </section>
 
-                {/* 重要时刻展示 */}
+                {/* 恋爱时间统计 */}
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-                    <div className="bg-white rounded-2xl shadow-lg p-10 glass-card">
-                        <h2 className="text-3xl font-bold text-center text-gray-800 mb-16">爱情里程碑</h2>
-
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            <div className="tech-card">
-                                <div className="w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center mb-4">
-                                    <div className="bg-rose-500 w-10 h-10 rounded-md flex items-center justify-center">
-                                        <span className="text-white font-bold">🎧</span>
-                                    </div>
+                    <Card className="bg-white rounded-2xl shadow-lg">
+                        <CardHeader>
+                            <CardTitle className="text-3xl font-bold text-center text-gray-800">
+                                我们的恋爱时间
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                                <div className="p-6">
+                                    <div className="text-6xl font-bold text-rose-500 mb-2">{daysInLove}</div>
+                                    <div className="text-xl text-gray-600">相恋天数</div>
+                                    <div className="text-sm text-gray-500 mt-2">从2025年5月24日开始</div>
                                 </div>
-                                <h3 className="font-bold text-lg">初次相遇</h3>
-                                <p className="text-gray-600 text-sm mt-1">2025年4月26日</p>
-                            </div>
 
-                            <div className="tech-card">
-                                <div className="w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center mb-4">
-                                    <div className="bg-pink-500 w-10 h-10 rounded-md flex items-center justify-center">
-                                        <span className="text-white font-bold">🇭🇰</span>
-                                    </div>
+                                <div className="p-6">
+                                    <div className="text-6xl font-bold text-rose-500 mb-2">{hoursInLove}</div>
+                                    <div className="text-xl text-gray-600">相爱小时</div>
+                                    <div className="text-sm text-gray-500 mt-2">每一小时都值得珍惜</div>
                                 </div>
-                                <h3 className="font-bold text-lg">香港重逢</h3>
-                                <p className="text-gray-600 text-sm mt-1">2025年5月17日</p>
-                            </div>
 
-                            <div className="tech-card">
-                                <div className="w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center mb-4">
-                                    <div className="bg-rose-400 w-10 h-10 rounded-md flex items-center justify-center">
-                                        <span className="text-white font-bold">🎡</span>
-                                    </div>
+                                <div className="p-6">
+                                    <div className="text-6xl font-bold text-rose-500 mb-2">{minutesInLove}</div>
+                                    <div className="text-xl text-gray-600">心动分钟</div>
+                                    <div className="text-sm text-gray-500 mt-2">每分钟都在创造回忆</div>
                                 </div>
-                                <h3 className="font-bold text-lg">深圳定情</h3>
-                                <p className="text-gray-600 text-sm mt-1">2025年5月24日</p>
                             </div>
-
-                            <div className="tech-card">
-                                <div className="w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center mb-4">
-                                    <div className="bg-red-400 w-10 h-10 rounded-md flex items-center justify-center">
-                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <h3 className="font-bold text-lg">未来计划</h3>
-                                <p className="text-gray-600 text-sm mt-1">更多美好等待书写</p>
-                            </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
                 </section>
 
-                {/* 特性展示 */}
+                {/* 爱情里程碑 */}
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
                     <div className="flex justify-center mb-16">
-                        <h2 className="text-3xl font-bold text-gray-800">记录我们的爱</h2>
+                        <h2 className="text-3xl font-bold text-gray-800">爱情里程碑</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {features.map((feature, index) => (
-                            <div key={index} className="feature-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                                <div className="p-8">
-                                    <div className="w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center mb-6">
-                                        <span className="text-3xl">{feature.icon}</span>
+                        {milestones.map((milestone, index) => (
+                            <Card key={index} className="feature-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                                <CardHeader>
+                                    <div className="flex items-center">
+                                        <div className="w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center mr-4">
+                                            <span className="text-3xl">{milestone.icon}</span>
+                                        </div>
+                                        <div>
+                                            <CardTitle className="text-xl font-bold text-gray-800">{milestone.title}</CardTitle>
+                                            <p className="text-rose-500">{milestone.date}</p>
+                                        </div>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-800 mb-3">{feature.title}</h3>
-                                    <p className="text-gray-600">{feature.description}</p>
-                                </div>
-                            </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-gray-600">{milestone.description}</p>
+                                </CardContent>
+                            </Card>
                         ))}
                     </div>
                 </section>
 
-                {/* 数据统计 */}
+                {/* 爱的留言板 */}
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-                    <div className="bg-gradient-to-r from-rose-500 to-pink-600 rounded-3xl p-1">
+                    <Card className="bg-gradient-to-r from-rose-500 to-pink-600 rounded-3xl overflow-hidden">
                         <div className="bg-white rounded-[22px] p-12">
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                                {stats.map((stat, index) => (
-                                    <div key={index} className="text-center">
-                                        <div className="text-5xl font-bold text-rose-500 mb-2">{stat.value}</div>
-                                        <div className="text-gray-600 text-lg">{stat.label}</div>
-                                    </div>
-                                ))}
-                            </div>
+                            <div className="max-w-3xl mx-auto">
+                                <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">爱的留言板</h2>
 
-                            <div className="max-w-2xl mx-auto mt-16">
-                                <h3 className="text-2xl font-bold text-center mb-6">为什么记录我们的故事？</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="flex items-start">
-                                        <div className="bg-rose-100 rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                                            <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold">珍藏心动瞬间</h4>
-                                            <p className="text-gray-600 text-sm">保存那些让你心跳加速的时刻</p>
-                                        </div>
+                                <div className="mb-8">
+                                    <Label htmlFor="love-note" className="block text-lg font-medium text-gray-700 mb-2">
+                                        给澄澄的悄悄话：
+                                    </Label>
+                                    <div className="flex space-x-2">
+                                        <Input
+                                            id="love-note"
+                                            type="text"
+                                            value={loveNote}
+                                            onChange={(e) => setLoveNote(e.target.value)}
+                                            placeholder="写下你的思念和爱意..."
+                                            className="flex-grow"
+                                        />
+                                        <Button
+                                            className="bg-rose-500 hover:bg-rose-600 text-white"
+                                            onClick={handleAddLoveNote}
+                                        >
+                                            发送
+                                        </Button>
                                     </div>
+                                </div>
 
-                                    <div className="flex items-start">
-                                        <div className="bg-rose-100 rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                                            <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                            </svg>
+                                <div className="space-y-4">
+                                    {loveNotes.length > 0 ? (
+                                        loveNotes.map((note, index) => (
+                                            <div key={index} className="bg-rose-50 rounded-lg p-4 border border-rose-100">
+                                                <div className="flex items-start">
+                                                    <div className="bg-rose-500 rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                                        <span className="text-white">❤️</span>
+                                                    </div>
+                                                    <p className="text-gray-700">{note}</p>
+                                                </div>
+                                                <p className="text-right text-sm text-gray-500 mt-2">刚刚</p>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-8 text-gray-500">
+                                            <p>还没有留言，写下你的第一句情话吧...</p>
                                         </div>
-                                        <div>
-                                            <h4 className="font-semibold">重温甜蜜回忆</h4>
-                                            <p className="text-gray-600 text-sm">随时回顾那些温暖的拥抱和笑容</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start">
-                                        <div className="bg-rose-100 rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                                            <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold">表达深藏情感</h4>
-                                            <p className="text-gray-600 text-sm">说出那些当面不好意思讲的情话</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start">
-                                        <div className="bg-rose-100 rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                                            <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold">规划美好未来</h4>
-                                            <p className="text-gray-600 text-sm">一起写下属于我们的愿望清单</p>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
+                    </Card>
+                </section>
+
+                {/* 爱情数据统计 */}
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+                    <div className="flex justify-center mb-16">
+                        <h2 className="text-3xl font-bold text-gray-800">我们的爱情数据</h2>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {stats.map((stat, index) => (
+                            <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
+                                <div className="text-5xl font-bold text-rose-500 mb-2">{stat.value}</div>
+                                <div className="text-gray-600 text-lg">{stat.label}</div>
+                            </Card>
+                        ))}
                     </div>
                 </section>
             </main>
@@ -294,8 +349,8 @@ export default function Home() {
                         <div>
                             <h3 className="text-lg font-semibold mb-6">我们的空间</h3>
                             <ul className="space-y-3">
-                                <li><a href="#" className="text-gray-400 hover:text-white">心动日记</a></li>
-                                <li><a href="#" className="text-gray-400 hover:text-white">回忆相册</a></li>
+                                <li><a href="#" className="text-gray-400 hover:text-white">恋爱日记</a></li>
+                                <li><a href="#" className="text-gray-400 hover:text-white">甜蜜相册</a></li>
                                 <li><a href="#" className="text-gray-400 hover:text-white">情书信箱</a></li>
                                 <li><a href="#" className="text-gray-400 hover:text-white">恋爱地图</a></li>
                                 <li><a href="#" className="text-gray-400 hover:text-white">未来计划</a></li>
@@ -303,31 +358,23 @@ export default function Home() {
                         </div>
 
                         <div>
-                            <h3 className="text-lg font-semibold mb-6">关于我们</h3>
+                            <h3 className="text-lg font-semibold mb-6">特别纪念</h3>
                             <ul className="space-y-3">
-                                <li><a href="#" className="text-gray-400 hover:text-white">我们的故事</a></li>
-                                <li><a href="#" className="text-gray-400 hover:text-white">爱情誓言</a></li>
-                                <li><a href="#" className="text-gray-400 hover:text-white">共同目标</a></li>
-                                <li><a href="#" className="text-gray-400 hover:text-white">私密笔记</a></li>
+                                <li><a href="#" className="text-gray-400 hover:text-white">初遇纪念</a></li>
+                                <li><a href="#" className="text-gray-400 hover:text-white">定情时刻</a></li>
+                                <li><a href="#" className="text-gray-400 hover:text-white">第一次约会</a></li>
+                                <li><a href="#" className="text-gray-400 hover:text-white">共同旅行</a></li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="text-lg font-semibold mb-6">爱的留言</h3>
-                            <p className="text-gray-400 mb-4">给彼此写下甜蜜的留言</p>
-                            <form className="flex">
-                                <input
-                                    type="text"
-                                    placeholder="写下你的悄悄话..."
-                                    className="px-4 py-2 bg-gray-800 text-white rounded-l flex-grow focus:outline-none focus:ring-2 focus:ring-rose-500"
-                                />
-                                <button
-                                    type="submit"
-                                    className="bg-rose-500 px-4 py-2 rounded-r hover:bg-rose-600 transition"
-                                >
-                                    →
-                                </button>
-                            </form>
+                            <h3 className="text-lg font-semibold mb-6">爱的宣言</h3>
+                            <p className="text-gray-400 mb-4 italic">
+                                你最可爱，我说时来不及思索，但思索之后，还是这样说。
+                            </p>
+                            <p className="text-gray-400 italic">
+                                愿我们携手走过每一个明天，直到永远。
+                            </p>
                         </div>
                     </div>
 
@@ -335,8 +382,8 @@ export default function Home() {
                         <p className="text-gray-400">© {new Date().getFullYear()} 澄心相印. 仅属于我们的空间.</p>
                         <div className="flex space-x-6 mt-4 md:mt-0">
                             <a href="#" className="text-gray-400 hover:text-white">私密协议</a>
-                            <a href="#" className="text-gray-400 hover:text-white">爱情宣言</a>
                             <a href="#" className="text-gray-400 hover:text-white">永恒誓言</a>
+                            <a href="#" className="text-gray-400 hover:text-white">爱的承诺</a>
                         </div>
                     </div>
                 </div>

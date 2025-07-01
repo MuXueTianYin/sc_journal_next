@@ -1,3 +1,4 @@
+"use client";
 import DocSidebar from "@/components/doc/Sidbar";
 
 export default function Docs() {
