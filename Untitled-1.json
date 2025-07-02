@@ -1,0 +1,52 @@
+string processInfoJson = {
+  "ols_of_id": "HT25050012", // 其他平台合同编号（必填）
+  "mu_name": "人民币", // 币种名称（必填，支持：人民币/美元/欧元/港币）
+  "orderMoney": 269.0, // 合同总金额（必填）
+  "remarks": "", // 合同备注（非必填，但示例中给了空字符串）
+  "orderFormDetails": [
+    // 订单明细列表（必填，至少一个）
+    {
+      "ols_ofd_id": "G755S1E00186A", // 其他平台订单号（必填）
+      "orderType": 1, // 订单类型（必填，1新单2返单...）
+      "orderType2": 1, // 订单类型2（必填，1内单2外单）
+      "makeType": 2, // 样批类型（必填，1样品2批量）
+      "productName": "客户型号", // 客户型号（必填）
+      "processTypeName": "沉金", // 表面处理名称（必填）
+      "layer": 2, // PCB层数（必填）
+      "productL": 520.0, // 交货尺寸长（mm）（必填）
+      "productW": 620.0, // 交货尺寸宽（mm）（必填）
+      "boardThickness": 1.6, // 板厚（mm）（必填）
+      "copperThickness": "1", // 外层铜厚（必填）
+      "deliveryDate": "2021-12-29T00:00:00", // 交货日期（必填，格式：yyyy-MM-ddTHH:mm:ss）
+      "quantityPcs": 6, // 交货数量（pcs）（必填）
+      "deliveryArea": 1.93, // 交货面积（m²）（必填）
+      "price": 257.92, // 单价（必填）
+      "costTotal": 1547.52, // 订单总金额（必填）
+      "manufactureCost": 0.0, // 模具费（必填）
+      "testCost": 0.0, // 测试架费（必填）
+      "filmCost": 0.0, // 飞针费（必填）
+      "camCost": 0.0, // 工程费（必填）
+      "urgentCost": 0.0, // 加急费（必填）
+      "otherCost": 0.0, // 其他费（必填）
+      "of_pjxsExpanse": 0.0, // 税费（必填）
+      "of_transportationExpanse": 0.0, // 运费（必填）
+      "of_actionMinMoney": 0.0, // 优惠金额（必填）
+      "urgentLevel": 0, // 加急等级（必填，0表示不加急）
+      "otherRe2": "000000", // 出货报告要求（必填，6位字符串）
+      "otherRe3": "000000", // 出货附件要求（必填，6位字符串）
+      "pcbt_name": "普通板", // pcb类型（必填，文档中要求）
+      "acceptanceStandardName": "IPC-A-600G II级", // 验收标准（必填）
+      "panelTypeName": "FR-4", // 板材类型（必填）
+      "testTypeName": "飞针测试", // 测试方式（必填）
+      "silkscreenTypeName": "白色", // 字符颜色（必填）
+      "masksTypeName": "绿色", // 阻焊颜色（必填）
+      "signTypeName": ".", // 标记类型（必填，示例中为"."）
+      "moldingTypeName": "CNC", // 成型方式（必填）
+      "otherKSM": 0, // 每平米孔数，单位万（必填，文档中要求）
+      // 非必填字段，但示例中出现的字段，根据需要添加
+      "fileName": "test.pdf", // 附件名称（非必填，如果有附件）
+      "fileBase": "base64字符串" // 附件base64（非必填，如果有附件）
+      // 注意：如果有附件，fileName和fileBase必须同时存在
+    }
+  ]
+}
