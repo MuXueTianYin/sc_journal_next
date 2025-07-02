@@ -1,8 +1,9 @@
 import fs from 'fs/promises'; // 使用异步版本
 import path from 'path';
 import matter from 'gray-matter';
+// import {getDocsDirectoryPath} from "@/utils/pathUtils";
 
-const docsDirectory = path.join(process.cwd(), 'public/assets/docs');
+const docsDirectory = path.join(process.cwd(), '/public/assets/docs');
 
 export interface Doc {
     slug: string;
@@ -52,12 +53,29 @@ export async function getDocBySlug(slug: string): Promise<Doc> {
     const toc: TocItem[] = [];
     const regex = /^(#{1,3})\s+(.+)$/gm;
     let match;
-
+    const idCounts: Record<string, number> = {};
+    // while ((match = regex.exec(fileContents)) !== null) {
+    //     toc.push({
+    //         level: match[1].length,
+    //         text: match[2],
+    //         id: match[2].toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
+    //     });
+    // }
     while ((match = regex.exec(fileContents)) !== null) {
+        let idText = match[2].toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
+        // 处理重复的 ID
+        if (idCounts[idText] === undefined) {
+            idCounts[idText] = 1;
+        } else {
+            idCounts[idText]++;
+            idText = `${idText}-${idCounts[idText]}`;
+        }
+
         toc.push({
             level: match[1].length,
             text: match[2],
-            id: match[2].toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
+            id: idText,
         });
     }
 

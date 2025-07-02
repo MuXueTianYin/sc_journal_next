@@ -5,53 +5,54 @@ import DocHeader from './DocHeader';
 import {Doc, TocItem} from '@/lib/docs';
 import {notMobile, useResponsive} from "@/utils/responsiveUtils";
 import TableOfContents from "@/components/DocLayout/TableOfContents";
+import { cn } from '@/lib/utils';
+
 interface DocLayoutProps {
     children: React.ReactNode;
     docs: Doc[];
     toc: TocItem[];
 }
 
-const DocLayout: React.FC<DocLayoutProps> = ({ children, docs,toc }) => {
-    const { isMobile, isTablet,isDesktop } = useResponsive();
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(true);
+const DocLayout: React.FC<DocLayoutProps> = ({ children, docs, toc }) => {
+    const { isMobile, isTablet, isDesktop } = useResponsive();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isClient, setIsClient] = useState(false); // 新增客户端状态标志
 
     useEffect(() => {
         setMobileMenuOpen(isDesktop);
-    }, []);
+        setIsClient(true); // 标记客户端已加载
+    }, [isDesktop]);
 
-    function isMobileMl(){
-        if(isMobile || isTablet)
-            return 'ml-20'
-        return ''
-    }
-
-    function tocLength(){
-        if(toc) {
-            return toc.length > 0
-        }
-        return false;
-    }
-
+    // 简化移动端判断
+    const isSmallScreen = isMobile || isTablet;
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50 ">
-            <DocHeader onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} title={'sc回忆'} showMobileMenu={mobileMenuOpen}  />
+        <div className="flex flex-col min-h-screen bg-gray-50">
+            <DocHeader
+                onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+                title={'sc回忆'}
+                showMobileMenu={mobileMenuOpen}
+            />
 
-            <div className="flex  w-full px-4 sm:px-6 lg:px-8">
-                {/* 移动端导航菜单 */}
-
-                {/* 桌面端左侧导航 */}
-                {mobileMenuOpen  &&
-                    <aside className=" md:block w-64 lg:w-72 xl:w-80 py-6 pr-6">
-                        <div className={"sticky top-24 h-[calc(100vh-64px)] overflow-y-auto " + isMobileMl} >
-                            <DocNav docs={docs}/>
+            <div className="flex w-full px-4 sm:px-6  lg:px-8">
+                {/* 左侧导航 */}
+                {mobileMenuOpen && (
+                    <aside className={cn(
+                        "md:block py-6 pr-6",
+                        isSmallScreen ? "fixed inset-0 z-40 bg-white w-64" : "w-64 lg:w-72 xl:w-80"
+                    )}>
+                        <div className={cn(
+                            "sticky top-24 h-[calc(100vh-64px)] overflow-y-auto",
+                            isSmallScreen ? "p-4" : ""
+                        )}>
+                            <DocNav docs={docs} />
                         </div>
                     </aside>
-                }
+                )}
 
-                <div className="flex  w-full">
-                    {/* 主内容区 - 调宽并增加内边距 */}
-                    <main className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                {/* 主内容区 */}
+                <div className="flex-1">
+                    <main className="py-8 px-4 sm:px-6 lg:px-8">
                         <div className="max-w-5xl mx-auto w-full">
                             {children}
                         </div>
@@ -59,14 +60,13 @@ const DocLayout: React.FC<DocLayoutProps> = ({ children, docs,toc }) => {
                 </div>
 
                 {/* 右侧目录 - 仅在桌面端显示 */}
-                {tocLength() && notMobile() && (
+                {isClient && toc?.length > 0 && isDesktop && (
                     <aside className="lg:block w-64 flex-shrink-0">
                         <div className="sticky top-24">
                             <TableOfContents toc={toc} />
                         </div>
                     </aside>
                 )}
-
             </div>
         </div>
     );

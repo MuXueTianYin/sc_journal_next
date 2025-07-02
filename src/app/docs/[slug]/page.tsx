@@ -13,7 +13,7 @@ interface PageProps {
     };
 }
 export default async function DocPage({ params }: PageProps) {
-    const { slug } = params;
+    const { slug } = await params;
     const doc = await getDocBySlug(slug);
 
     return (

@@ -12,7 +12,7 @@ const DocNav: React.FC<DocNavProps> = ({ docs, onSelect }) => {
     const pathname = usePathname();
 
     return (
-        <nav className="space-y-1">
+        <nav className="space-y-1 sm:pt-10 md:pt-6 pt-8">
             <h3 className="px-3 text-sm font-medium text-gray-500 uppercase tracking-wider">
                 日记目录
             </h3>

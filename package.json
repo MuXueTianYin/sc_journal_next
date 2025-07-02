@@ -9,7 +9,7 @@
     "lint": "next lint",
     "pages:build": "next build",
     "preview": "npm run pages:build && wrangler pages dev",
-    "predeploy": "touch out/_next/static/.nojekyll",
+    "predeploy": "touch out/_next/static/.nojekyll   out/.nojekyll",
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
