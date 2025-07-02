@@ -7,21 +7,22 @@ export async function generateStaticParams() {
     const docs = await getAllDocs();
     return docs.map(doc => ({ slug: doc.slug }));
 }
-
-export default async function DocPage({
-                                          params,
-                                      }: {
-    params: { slug: string };
-}) {
-    const { slug } = await params
+interface PageProps {
+    params: {
+        slug: string;
+    };
+}
+export default async function DocPage({ params }: PageProps) {
+    const { slug } = params;
     const doc = await getDocBySlug(slug);
 
     return (
-        <DocsLayout>
+        <DocsLayout toc={doc.toc}>
             <DocContent
                 title={doc.title}
                 content={doc.content}
-                toc={doc.toc}
+                date={doc.date}
+                tags={doc.tags}
             />
         </DocsLayout>
     );

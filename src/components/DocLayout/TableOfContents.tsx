@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { TocItem } from '@/lib/docs';
 
@@ -15,7 +16,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ toc }) => {
                 {toc.map((item) => (
                     <li
                         key={item.id}
-                        className={`${item.depth === 2 ? 'font-medium' : 'text-sm ml-4'}`}
+                        // className={`${item.depth === 2 ? 'font-medium' : 'text-sm ml-4'}`}
                     >
                         <a
                             href={`#${item.id}`}

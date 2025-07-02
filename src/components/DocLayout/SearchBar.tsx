@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Search, X } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import React, {useEffect, useRef, useState} from 'react';
+import {Input} from '@/components/ui/input';
+import {Search, X} from 'lucide-react';
+import {Badge} from '@/components/ui/badge';
 import useDebounce from '@/lib/hooks/useDebounce';
-import { cn } from '@/lib/utils';
+import {cn} from '@/lib/utils';
 import {useResponsive} from "@/utils/responsiveUtils";
 
 

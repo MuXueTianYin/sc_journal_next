@@ -1,20 +1,6 @@
 import React from 'react';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader, DialogTitle
-} from '@/components/ui/dialog';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { User, Settings, LogOut, Heart, BookOpen } from 'lucide-react';
-import {notMobile} from "@/utils/responsiveUtils";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from '@/components/ui/dialog';
+import {BookOpen, Heart, LogOut, Settings, User} from 'lucide-react';
 
 interface UserMenuProps {
     isOpen: boolean;

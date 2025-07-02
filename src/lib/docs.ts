@@ -1,80 +1,73 @@
-import fs from 'fs';
+import fs from 'fs/promises'; // 使用异步版本
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
-import { visit } from 'unist-util-visit';
 
-// const docsDir = path.join(process.cwd(), 'content', 'docs');
-const docsDir = path.join(process.cwd(), 'public/assets/docs');
+const docsDirectory = path.join(process.cwd(), 'public/assets/docs');
 
-export type TocItem = {
-    id: string;
-    text: string;
-    depth: number;
-};
-export type node = {
-    id: string;
-    text: string;
-    value: string;
-    depth: number;
-    children: node[];
-};
-
-export type Doc = {
+export interface Doc {
     slug: string;
     title: string;
-    date?: string;
+    date: string;
+    excerpt: string;
     content: string;
     toc: TocItem[];
-};
+    tags: string[];
+    key?: string;
+}
 
-export async function getAllDocs(): Promise<Doc[]> {
-    const filenames = fs.readdirSync(docsDir);
-    const docs = await Promise.all(
-        filenames.map(async (filename) => {
-            const slug = filename.replace(/\.md$/, '');
-            return getDocBySlug(slug);
-        })
-    );
+export interface TocItem {
+    id: string;
+    text: string;
+    level: number;
+}
 
-    // 按日期排序（如果有）
-    return docs.sort((a, b) =>
-        new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
-    );
+export async function getAllDocs(): Promise<Doc[]> { // 改为 async
+    const fileNames = await fs.readdir(docsDirectory);
+
+    const docs = await Promise.all(fileNames.map(async fileName => {
+        const slug = fileName.replace(/\.md$/, '');
+        const fullPath = path.join(docsDirectory, fileName);
+        const fileContents = await fs.readFile(fullPath, 'utf8');
+        const matterResult = matter(fileContents);
+
+        return {
+            slug,
+            title: matterResult.data.title || slug,
+            date: matterResult.data.date || new Date().toISOString(),
+            excerpt: matterResult.data.excerpt || "",
+            tags: matterResult.data.tags || [],
+            content: '', // 占位符或可选字段
+            toc: []      // 占位符或可选字段
+        };
+    }));
+
+    return docs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export async function getDocBySlug(slug: string): Promise<Doc> {
-    const fullPath = path.join(docsDir, `${slug}.md`);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const fullPath = path.join(docsDirectory, `${slug}.md`);
+    const fileContents = await fs.readFile(fullPath, 'utf8');
+    const matterResult = matter(fileContents);
 
-    // 解析Markdown元数据
-    const { data, content } = matter(fileContents);
-
-    // 提取目录
     const toc: TocItem[] = [];
-    const processor = remark()
-        .use(() => (tree) => {
-            visit(tree, 'heading', (node:node) => {
-                const text = node.children[0].value;
-                const id = text.toLowerCase().replace(/\s+/g, '-');
-                toc.push({
-                    id,
-                    text,
-                    depth: node.depth,
-                });
-            });
-        })
-        .use(html);
+    const regex = /^(#{1,3})\s+(.+)$/gm;
+    let match;
 
-    const processedContent = await processor.process(content);
-    const htmlContent = processedContent.toString();
+    while ((match = regex.exec(fileContents)) !== null) {
+        toc.push({
+            level: match[1].length,
+            text: match[2],
+            id: match[2].toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
+        });
+    }
 
     return {
         slug,
-        title: data.title || slug,
-        date: data.date || '',
-        content: htmlContent,
+        title: matterResult.data.title || slug,
+        date: matterResult.data.date || new Date().toISOString(),
+        excerpt: matterResult.data.excerpt || "",
+        content: matterResult.content,
         toc,
+        tags: matterResult.data.tags || [],
     };
 }

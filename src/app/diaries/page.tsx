@@ -4,9 +4,6 @@ import DiaryLayout from "@/components/DiaryLayout/DiaryLayout";
 import React from "react";
 
 
-
-
-
 export default async function DiariesPage() {
     const diaries = getAllDiaries();
 ;
