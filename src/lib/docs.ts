@@ -14,12 +14,36 @@ export interface Doc {
     toc: TocItem[];
     tags: string[];
     key?: string;
+    mdContent: string;
 }
 
 export interface TocItem {
     id: string;
     text: string;
     level: number;
+}
+
+
+export interface MdDoc {
+    slug: string;
+    content: string;
+    key?: string;
+}
+
+export async function getAllMdDocs(): Promise<MdDoc[]> { // 改为 async
+    const fileNames = await fs.readdir(docsDirectory);
+
+    const docs = await Promise.all(fileNames.map(async fileName => {
+        const slug = fileName.replace(/\.md$/, '');
+        const fullPath = path.join(docsDirectory, fileName);
+        const fileContents = await fs.readFile(fullPath, 'utf8');
+        return {
+            slug,
+            content: fileContents
+        };
+    }));
+
+    return docs;
 }
 
 export async function getAllDocs(): Promise<Doc[]> { // 改为 async
@@ -29,6 +53,7 @@ export async function getAllDocs(): Promise<Doc[]> { // 改为 async
         const slug = fileName.replace(/\.md$/, '');
         const fullPath = path.join(docsDirectory, fileName);
         const fileContents = await fs.readFile(fullPath, 'utf8');
+        // console.log(`fileContents:${fileContents}`)
         const matterResult = matter(fileContents);
 
         return {
@@ -37,11 +62,12 @@ export async function getAllDocs(): Promise<Doc[]> { // 改为 async
             date: matterResult.data.date || new Date().toISOString(),
             excerpt: matterResult.data.excerpt || "",
             tags: matterResult.data.tags || [],
+            mdContent:fileContents,
             content: '', // 占位符或可选字段
             toc: []      // 占位符或可选字段
         };
     }));
-
+    console.log(`docs:${JSON.parse(JSON.stringify(docs))}`)
     return docs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
@@ -85,6 +111,7 @@ export async function getDocBySlug(slug: string): Promise<Doc> {
         date: matterResult.data.date || new Date().toISOString(),
         excerpt: matterResult.data.excerpt || "",
         content: matterResult.content,
+        mdContent:fileContents,
         toc,
         tags: matterResult.data.tags || [],
     };

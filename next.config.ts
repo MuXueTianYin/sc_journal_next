@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type {NextConfig} from "next";
 
 const isProd = process.env.NODE_ENV === 'production';
 const repositoryName = 'sc_journal';
@@ -11,6 +11,10 @@ const nextConfig:NextConfig = {
     typescript: {
         ignoreBuildErrors: true, // 构建时忽略 TypeScript 错误
     },
+    // webpack: (config) => {
+    //     config.resolve.alias['rehype-react'] = path.resolve(__dirname, 'node_modules/rehype-react');
+    //     return config;
+    // },
     trailingSlash: true, // 强制路径以斜杠结尾，避免路由冲突
     basePath: isProd ? `/${repositoryName}` : '', // 生产环境添加仓库名称
     assetPrefix: isProd ? `/${repositoryName}/` : '', // 资源路径前缀

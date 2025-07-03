@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
+
+
+/* 隐藏github图标 */
+@layer utilities {
+  .bytemd-toolbar-icon.bytemd-tippy.bytemd-tippy-right:last-child {
+    display: none !important;
+  }
+}
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -77,6 +88,7 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
+
 
 
 .dark {
