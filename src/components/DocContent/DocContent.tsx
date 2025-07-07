@@ -8,7 +8,6 @@ import {format} from 'date-fns';
 import {zhCN} from 'date-fns/locale';
 import 'highlight.js/styles/github-dark.css';
 import MdViewer from "@/components/Markdown/MdViewer";
-import JSXPreview from "@/components/Markdown/JSXPreview";
 
 interface DocContentProps {
     title?: string;
@@ -49,7 +48,8 @@ const DocContent: React.FC<DocContentProps> = ({
     return (
         <Card className="p-6 md:p-8 lg:p-10 bg-white dark:bg-gray-900 border-none shadow-none">
             <article className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-blockquote:border-l-blue-600 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-pre:bg-gray-900 prose-pre:rounded-xl">
-                <JSXPreview markdown={content} />
+                {/*<JSXPreview markdown={content} />*/}
+                <MdViewer value={content} />
             </article>
 
             <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-wrap justify-between items-center">
