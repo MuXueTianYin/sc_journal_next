@@ -1,20 +1,18 @@
 'use client';
 import React, {useState} from 'react';
-import {Menu, Search, User, X} from 'lucide-react';
-import {Button} from '@/components/ui/button';
 import UserMenu from './UserMenu';
+import {Button} from "@/components/ui/button";
+import {Search, User} from "lucide-react";
 import {Input} from "@/components/ui/input";
+import {SidebarTrigger} from "@/components/ui/sidebar";
+import Link from "next/link";
 
 interface DocHeaderProps {
-    onMenuToggle: () => void;
     title: string;
-    showMobileMenu: boolean;
 }
 
 const DocHeader: React.FC<DocHeaderProps> = ({
-                                                 onMenuToggle,
                                                  title,
-                                                 showMobileMenu
                                              }) => {
 
     const [searchQuery, setSearchQuery] = useState<string>(''); // 修改为 string 类型
@@ -28,23 +26,25 @@ const DocHeader: React.FC<DocHeaderProps> = ({
     return (
         <>
             <header
-                className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 shadow-sm">
+                className="w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         {/* 左侧：标题和菜单按钮 */}
-                        <div className="flex items-center">
-                            <button
-                                type="button"
-                                onClick={onMenuToggle}
-                                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 mr-3"
-                            >
-                                {showMobileMenu ? (
-                                    <X className="h-6 w-6"/>
-                                ) : (
-                                    <Menu className="h-6 w-6"/>
-                                )}
-                            </button>
-                            <h1 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h1>
+                        <div className="flex items-center  justify-between">
+                            {/*<button*/}
+                            {/*    type="button"*/}
+                            {/*    onClick={onMenuToggle}*/}
+                            {/*    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 mr-3"*/}
+                            {/*>*/}
+                            {/*    {showMobileMenu ? (*/}
+                            {/*        <X className="h-6 w-6"/>*/}
+                            {/*    ) : (*/}
+                            {/*        <Menu className="h-6 w-6"/>*/}
+                            {/*    )}*/}
+                            {/*</button>*/}
+                            <SidebarTrigger />
+                            {/*<Link className="text-xl font-bold text-gray-900 dark:text-white" href={'/'}>首页</Link>*/}
+                            <Link className="text-xl font-bold text-gray-900 dark:text-white" href={'/docs'}>{title}</Link>
                         </div>
 
                         {/* 中间：搜索框（桌面端） */}
@@ -52,6 +52,7 @@ const DocHeader: React.FC<DocHeaderProps> = ({
                             <div
                                 className="relative w-full cursor-pointer flex items-center border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 px-2 py-1 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                             >
+
                                 {/*<Search className="h-5 w-5 mr-2"/>*/}
                                 {/*<span className="text-sm">搜索文档...</span>*/}
                                 {/*<div className="ml-auto flex items-center">*/}

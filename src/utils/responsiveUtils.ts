@@ -16,14 +16,11 @@ const Breakpoints = {
     '2xl': 1536 // 特大屏幕
 };
 
-// 响应式尺寸对象（简化版）
+// 响应式尺寸对象
 type ResponsiveSize = {
     width: number;
     height: number;
 }
-
-// 当前设备类型（用于SSR/默认值）
-let currentDeviceType: DeviceType = DeviceType.DESKTOP;
 
 // 判断设备类型（核心函数）
 export function getDeviceType(width: number): DeviceType {
@@ -35,94 +32,58 @@ export function getDeviceType(width: number): DeviceType {
     return DeviceType.DESKTOP;
 }
 
-// 在浏览器环境中更新设备类型
-if (typeof window !== 'undefined') {
-    // 设置初始值
-    currentDeviceType = getDeviceType(window.innerWidth);
-
-    // 窗口大小变化时更新
-    window.addEventListener('resize', () => {
-        currentDeviceType = getDeviceType(window.innerWidth);
-    });
-}
-
-// 获取设备类型（适用于SSR和CSR）
-export function deviceType(): DeviceType {
-    return currentDeviceType;
-}
-
-// 判断是否为移动设备
-export function isMobile(): boolean {
-    return deviceType() === DeviceType.MOBILE;
-}
-
-
-export function notMobile(): boolean{
-    return !isMobile() && !isTablet()
-}
-
-// 判断是否为平板设备
-export function isTablet(): boolean {
-    return deviceType() === DeviceType.TABLET;
-}
-
-// 判断是否为桌面设备
-export function isDesktop(): boolean {
-    return deviceType() === DeviceType.DESKTOP;
-}
-
-// 获取当前窗口尺寸
-export function getWindowSize(): ResponsiveSize {
-    if (typeof window === 'undefined') {
-        return { width: 0, height: 0 };
-    }
-    return {
-        width: window.innerWidth,
-        height: window.innerHeight
-    };
-}
-
-// 响应式Hook（用于React组件）
+// 响应式Hook（完全客户端渲染）
 export function useResponsive() {
-    const [device, setDevice] = React.useState<DeviceType>(deviceType());
-    const [windowSize, setWindowSize] = React.useState<ResponsiveSize>(getWindowSize());
+    // 使用状态管理设备类型和窗口尺寸
+    const [device, setDevice] = React.useState<DeviceType>(DeviceType.DESKTOP);
+    const [windowSize, setWindowSize] = React.useState<ResponsiveSize>({
+        width: 0,
+        height: 0
+    });
+
+    // 添加一个标记，表示是否已完成初始测量
+    const [isMeasured, setIsMeasured] = React.useState(false);
 
     React.useEffect(() => {
-        // 仅在浏览器环境中执行
+        // 确保只在客户端执行
         if (typeof window === 'undefined') return;
 
-        // 初始值设置
-        setDevice(getDeviceType(window.innerWidth));
-        setWindowSize({
-            width: window.innerWidth,
-            height: window.innerHeight
-        });
+        // 更新状态的函数
+        const updateResponsiveState = () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
 
-        // 窗口大小变化处理器
-        const handleResize = () => {
-            const newWidth = window.innerWidth;
-            setDevice(getDeviceType(newWidth));
-            setWindowSize({
-                width: newWidth,
-                height: window.innerHeight
-            });
+            setDevice(getDeviceType(width));
+            setWindowSize({ width, height });
+
+            // 标记已完成初始测量
+            if (!isMeasured) setIsMeasured(true);
         };
 
-        // 添加监听器
-        window.addEventListener('resize', handleResize);
+        // 初始设置
+        updateResponsiveState();
+
+        // 添加窗口大小变化监听器
+        window.addEventListener('resize', updateResponsiveState);
 
         // 清理函数
         return () => {
-            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', updateResponsiveState);
         };
-    }, []);
+    }, [isMeasured]); // 仅在 isMeasured 变化时重新创建effect
+
+    // 计算移动端判断
+    const isMobile = device === DeviceType.MOBILE;
+    const isTablet = device === DeviceType.TABLET;
+    const isDesktop = device === DeviceType.DESKTOP;
 
     return {
         device,
-        isMobile: device === DeviceType.MOBILE,
-        isTablet: device === DeviceType.TABLET,
-        isDesktop: device === DeviceType.DESKTOP,
+        isMobile,
+        isTablet,
+        isDesktop,
         windowSize,
-        breakpoints: Breakpoints
+        breakpoints: Breakpoints,
+        isMeasured // 返回测量状态
     };
 }

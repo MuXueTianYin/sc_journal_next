@@ -10,7 +10,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ toc }) => {
 
     // 创建唯一 key 的函数
     const createUniqueKey = (item: TocItem, index: number) => {
-        return `${item.id}-${index}`;
+        return `${item.value}-${index}`;
     };
 
     return (
@@ -20,13 +20,13 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ toc }) => {
                 {toc.map((item, index) => (
                     <li
                         key={createUniqueKey(item, index)}
-                        className={item.level === 2 ? 'font-medium' : 'text-sm ml-4'}
+                        className={item.depth === 2 ? 'font-medium' : 'text-sm ml-4'}
                     >
                         <a
-                            href={`#${item.id}`}
+                            href={`#${item.value}`}
                             className="text-gray-600 hover:text-blue-600 transition-colors block py-1"
                         >
-                            {item.text}
+                            {item.value}
                         </a>
                     </li>
                 ))}

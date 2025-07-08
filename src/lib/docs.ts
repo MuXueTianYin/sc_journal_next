@@ -1,28 +1,31 @@
-import fs from 'fs/promises'; // 使用异步版本
+import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
-// import {getDocsDirectoryPath} from "@/utils/pathUtils";
+import toc from "remark-extract-toc" ;
+import markdown from "remark-parse";
+import { unified } from "unified";
+
+
 
 const docsDirectory = path.join(process.cwd(), '/public/assets/docs');
 
 export interface Doc {
     slug: string;
     title: string;
-    date: string;
+    date?: string;
     excerpt: string;
     content: string;
-    toc: TocItem[];
+    resultToc?:TocItem[];
     tags: string[];
     key?: string;
     mdContent: string;
 }
 
 export interface TocItem {
-    id: string;
-    text: string;
-    level: number;
+	depth?: number;
+	value?: string;
+	children?: [];
 }
-
 
 export interface MdDoc {
     slug: string;
@@ -64,10 +67,10 @@ export async function getAllDocs(): Promise<Doc[]> { // 改为 async
             tags: matterResult.data.tags || [],
             mdContent:fileContents,
             content: '', // 占位符或可选字段
-            toc: []      // 占位符或可选字段
+            resultToc: []      // 占位符或可选字段
         };
     }));
-    console.log(`docs:${JSON.parse(JSON.stringify(docs))}`)
+    // console.log(`docs:${JSON.parse(JSON.stringify(docs))}`)
     return docs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
@@ -75,35 +78,9 @@ export async function getDocBySlug(slug: string): Promise<Doc> {
     const fullPath = path.join(docsDirectory, `${slug}.md`);
     const fileContents = await fs.readFile(fullPath, 'utf8');
     const matterResult = matter(fileContents);
-
-    const toc: TocItem[] = [];
-    const regex = /^(#{1,3})\s+(.+)$/gm;
-    let match;
-    const idCounts: Record<string, number> = {};
-    // while ((match = regex.exec(fileContents)) !== null) {
-    //     toc.push({
-    //         level: match[1].length,
-    //         text: match[2],
-    //         id: match[2].toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
-    //     });
-    // }
-    while ((match = regex.exec(fileContents)) !== null) {
-        let idText = match[2].toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-
-        // 处理重复的 ID
-        if (idCounts[idText] === undefined) {
-            idCounts[idText] = 1;
-        } else {
-            idCounts[idText]++;
-            idText = `${idText}-${idCounts[idText]}`;
-        }
-
-        toc.push({
-            level: match[1].length,
-            text: match[2],
-            id: idText,
-        });
-    }
+    const processor = unified().use(markdown, { commonmark: true }).use(toc);
+    const node = processor.parse(matterResult.content);
+    const resultToc = processor.runSync(node) as unknown as   TocItem[];
 
     return {
         slug,
@@ -112,7 +89,7 @@ export async function getDocBySlug(slug: string): Promise<Doc> {
         excerpt: matterResult.data.excerpt || "",
         content: matterResult.content,
         mdContent:fileContents,
-        toc,
+        resultToc,
         tags: matterResult.data.tags || [],
     };
 }
