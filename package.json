@@ -10,7 +10,8 @@
     "pages:build": "next build",
     "preview": "npm run pages:build && wrangler pages dev",
     "predeploy": "touch out/_next/static/.nojekyll   out/.nojekyll",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "cleanup": "node cleanup.js"
   },
   "dependencies": {
     "@bytemd/plugin-gfm": "^1.22.0",

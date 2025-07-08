@@ -1,67 +1,125 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
+import crypto from 'crypto';
+import {unified} from "unified";
+import markdown from "remark-parse";
+import toc from "remark-extract-toc";
+import {TocItem} from "@/lib/docs";
 
+// 将 id-map.json 移到 public 目录外
+const dataDirectory = path.join(process.cwd(), 'data');
 const diariesDirectory = path.join(process.cwd(), 'public/assets/docs');
+const idMapPath = path.join(dataDirectory, 'id-map.json'); // 修改存储位置
+
+// 确保目录存在
+if (!fs.existsSync(dataDirectory)) {
+    fs.mkdirSync(dataDirectory, { recursive: true });
+}
 
 export interface Diary {
     id: string;
+    neme: string;
     title: string;
-    date: string;
-    excerpt: string;
     content: string;
-    headings: { id: string; text: string; level: number }[];
+    resultToc?: TocItem[];
 }
 
-export function getAllDiaries(): Omit<Diary, 'content' | 'headings'>[] {
-    const fileNames = fs.readdirSync(diariesDirectory);
+function generateStableId(filePath: string, content: string): string {
+    const hash = crypto.createHash('sha256');
+    hash.update(filePath + content);
+    return hash.digest('hex').substring(0, 12);
+}
 
-    return fileNames.map(fileName => {
-        const id = fileName.replace(/\.md$/, '');
+export function getAllDiaries(): Diary[] {
+    const fileNames = fs.readdirSync(diariesDirectory)
+        .filter(fileName => fileName.endsWith('.md')); // 确保只处理 .md 文件
+
+    let idMap: Record<string, string> = {};
+    if (fs.existsSync(idMapPath)) {
+        try {
+            idMap = JSON.parse(fs.readFileSync(idMapPath, 'utf8'));
+        } catch (e) {
+            console.error("解析 id-map.json 失败，将重新生成", e);
+        }
+    }
+
+    const diaries = fileNames.map((fileName) => {
+        const neme = fileName.replace(/\.md$/, '');
         const fullPath = path.join(diariesDirectory, fileName);
+
+        try {
+            const fileContents = fs.readFileSync(fullPath, 'utf8');
+            const matterResult = matter(fileContents);
+
+            const processor = unified().use(markdown, {commonmark: true}).use(toc);
+            const node = processor.parse(matterResult.content);
+            const resultToc = processor.runSync(node) as unknown as TocItem[];
+
+            let id = idMap[fileName];
+            if (!id) {
+                id = generateStableId(fullPath, fileContents);
+                idMap[fileName] = id;
+            }
+
+            return {
+                id,
+                neme,
+                title: matterResult.data.title || neme,
+                content: fileContents,
+                resultToc
+            };
+        } catch (error) {
+            console.error(`处理文件 ${fileName} 时出错:`, error);
+            return null;
+        }
+    }).filter(Boolean) as Diary[];
+
+    // 保存到新位置
+    try {
+        fs.writeFileSync(idMapPath, JSON.stringify(idMap, null, 2));
+    } catch (e) {
+        console.error("写入 id-map.json 失败", e);
+    }
+
+    return diaries;
+}
+
+export async function getDiaryById(id: string): Promise<Diary | null> {
+    if (!id) return null; // 添加空 ID 检查
+
+    let idMap: Record<string, string> = {};
+    if (fs.existsSync(idMapPath)) {
+        try {
+            idMap = JSON.parse(fs.readFileSync(idMapPath, 'utf8'));
+        } catch (e) {
+            console.error("解析 id-map.json 失败", e);
+            return null;
+        }
+    }
+
+    const fileName = Object.keys(idMap).find(key => idMap[key] === id);
+    if (!fileName) return null;
+
+    const fullPath = path.join(diariesDirectory, fileName);
+
+    try {
         const fileContents = fs.readFileSync(fullPath, 'utf8');
         const matterResult = matter(fileContents);
 
+        const processor = unified().use(markdown, {commonmark: true}).use(toc);
+        const node = processor.parse(matterResult.content);
+        const resultToc = processor.runSync(node) as unknown as TocItem[];
+
         return {
             id,
-            title: matterResult.data.title || id,
-            date: matterResult.data.date || new Date().toISOString(),
-            excerpt: matterResult.data.excerpt || "",
+            neme: fileName.replace(/\.md$/, ''),
+            title: matterResult.data.title || fileName.replace(/\.md$/, ''),
+            content: fileContents,
+            resultToc,
         };
-    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
-
-export async function getDiaryById(id: string): Promise<Diary> {
-    const fullPath = path.join(diariesDirectory, `${id}.md`);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const matterResult = matter(fileContents);
-
-    const processedContent = await remark()
-        .use(html)
-        .process(matterResult.content);
-    const contentHtml = processedContent.toString();
-
-    // 提取标题用于目录
-    const headings: Diary['headings'] = [];
-    const regex = /<h([1-3]) id="([^"]+)"[^>]*>(.*?)<\/h\1>/gi;
-    let match;
-
-    while ((match = regex.exec(contentHtml)) !== null) {
-        headings.push({
-            level: parseInt(match[1]),
-            id: match[2],
-            text: match[3].replace(/<[^>]*>/g, ''),
-        });
+    } catch (error) {
+        console.error(`读取文件 ${fileName} (ID: ${id}) 时出错:`, error);
+        return null;
     }
-
-    return {
-        id,
-        title: matterResult.data.title || id,
-        date: matterResult.data.date || new Date().toISOString(),
-        excerpt: matterResult.data.excerpt || "",
-        content: contentHtml,
-        headings,
-    };
 }

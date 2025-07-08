@@ -1,19 +1,20 @@
 "use client";
 import React, {Suspense} from 'react';
 import DocHeader from './DocHeader';
-import {Doc} from '@/lib/docs';
 import DocContent from "@/components/DocContent/DocContent";
-import AppSidebar from "@/components/layout/app-sidebar";
 import {SidebarProvider} from "@/components/ui/sidebar";
+import {Diary} from "@/utils/content/utils";
+import AppSidebar from "@/components/layout/app-sidebar";
 
 
 interface DocLayoutProps {
-    doc: Doc;
-    docs: Doc[];
+    doc: Diary;
+    docs: Diary[];
 }
 
 
 const DocLayout: React.FC<DocLayoutProps> = ({doc,docs}) => {
+
 
 
     return (
@@ -28,6 +29,7 @@ const DocLayout: React.FC<DocLayoutProps> = ({doc,docs}) => {
                         <Suspense fallback={<div>加载更多...</div>}>
                             <div className='z-50 sticky  h-[calc(100vh-64px)] overflow-y-auto pt-8'>
                                 <AppSidebar docs={docs}/>
+                                {/*<DiaryNavigation diaries={docs} currentId={doc?.id} />*/}
                             </div>
                         </Suspense>
                         {/* 主内容区 */}
@@ -36,7 +38,7 @@ const DocLayout: React.FC<DocLayoutProps> = ({doc,docs}) => {
                                 <div className="max-w-5xl mx-auto w-full">
                                     <DocContent
                                         title={doc.title}
-                                        content={doc.mdContent}
+                                        content={doc.content}
                                     />
                                 </div>
                             </main>

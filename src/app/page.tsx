@@ -142,7 +142,7 @@ export default function Home() {
                         <div className="flex items-center space-x-4">
                             <Button
                                 className="bg-rose-500 hover:bg-rose-600 text-white"
-                                onClick={() => router.push('/docs')}
+                                onClick={() => router.push('/diaries')}
                             >
                                 写新日记 →
                             </Button>

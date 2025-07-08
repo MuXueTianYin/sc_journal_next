@@ -1,7 +1,8 @@
 import React from 'react';
-import DocLayout from "@/components/DocLayout/DocLayout";
+// import DocLayout from "@/components/DocLayout/DocLayout";
 import {getAllDocs, getDocBySlug} from '@/lib/docs';
 import {notFound} from "next/navigation";
+import MdViewer from "@/components/Markdown/MdViewer";
 
 
 interface PageProps {
@@ -90,10 +91,11 @@ export default async function DocPage({ params }: PageProps) {
     ]);
     console.log(docData,allDocs)
     if (!docData) notFound(); // 文档不存在时触发404
-    const  docs= allDocs.map(d => ({ ...d, key: d.slug }))
+    // const  docs= allDocs.map(d => ({ ...d, key: d.slug }))
     return (
         <div className="flex flex-col items-center justify-center w-full h-full">
-            <DocLayout  docs={docs}  doc={docData} />
+            {/*<DocLayout  docs={docs}  doc={docData} />*/}
+            <MdViewer value={docData.content}  />
         </div>
     );
 

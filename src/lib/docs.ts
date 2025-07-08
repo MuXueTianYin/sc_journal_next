@@ -10,7 +10,7 @@ import { unified } from "unified";
 const docsDirectory = path.join(process.cwd(), '/public/assets/docs');
 
 export interface Doc {
-    slug: string;
+    slug?: string;
     title: string;
     date?: string;
     excerpt: string;
@@ -33,21 +33,6 @@ export interface MdDoc {
     key?: string;
 }
 
-export async function getAllMdDocs(): Promise<MdDoc[]> { // 改为 async
-    const fileNames = await fs.readdir(docsDirectory);
-
-    const docs = await Promise.all(fileNames.map(async fileName => {
-        const slug = fileName.replace(/\.md$/, '');
-        const fullPath = path.join(docsDirectory, fileName);
-        const fileContents = await fs.readFile(fullPath, 'utf8');
-        return {
-            slug,
-            content: fileContents
-        };
-    }));
-
-    return docs;
-}
 
 export async function getAllDocs(): Promise<Doc[]> { // 改为 async
     const fileNames = await fs.readdir(docsDirectory);

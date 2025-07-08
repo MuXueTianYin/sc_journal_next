@@ -1,12 +1,11 @@
 "use client"
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import DiaryNavigation from './DiaryNavigation';
-import TableOfContents from './TableOfContents';
 import {Diary} from "@/utils/content/utils";
 
 interface DiaryLayoutProps {
     children: React.ReactNode;
-    diaries: Omit<Diary, 'content' | 'headings'>[];
+    diaries: Diary[];
     currentDiary?: Diary;
 }
 
@@ -71,11 +70,11 @@ const DiaryLayout: React.FC<DiaryLayoutProps> = ({ children, diaries, currentDia
                             </div>
 
                             {/* 文章目录 - 桌面端 */}
-                            {currentDiary?.headings && currentDiary.headings.length > 0 && (
-                                <div className="hidden md:block w-64 flex-shrink-0">
-                                    <TableOfContents headings={currentDiary.headings} />
-                                </div>
-                            )}
+                            {/*{currentDiary?.resultToc && currentDiary.resultToc.length > 0 && (*/}
+                            {/*    <div className="hidden md:block w-64 flex-shrink-0">*/}
+                            {/*        /!*<TableOfContents headings={currentDiary.resultToc} />*!/*/}
+                            {/*    </div>*/}
+                            {/*)}*/}
                         </div>
                     </div>
                 </main>

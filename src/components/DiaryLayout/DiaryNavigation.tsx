@@ -1,11 +1,9 @@
 import Link from 'next/link';
-import { format } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
 import {Diary} from "@/utils/content/utils";
 
 
 interface DiaryNavigationProps {
-    diaries: Omit<Diary, 'content' | 'headings'>[];
+    diaries: Diary[];
     currentId?: string;
 }
 
@@ -40,11 +38,11 @@ const DiaryNavigation: React.FC<DiaryNavigationProps> = ({ diaries, currentId })
                         </h3>
                         <div className="text-sm mt-1 flex items-center">
               <span className="text-gray-500 dark:text-gray-400">
-                {format(new Date(diary.date), 'yyyy年MM月dd日', { locale: zhCN })}
+                {/*{format(new Date(diary.date), 'yyyy年MM月dd日', { locale: zhCN })}*/}
               </span>
                             <span className="mx-2 text-gray-300 dark:text-gray-600">•</span>
                             <span className="text-pink-500">
-                {diary.excerpt.slice(0, 20)}...
+                {/*{diary.excerpt.slice(0, 20)}...*/}
               </span>
                         </div>
                     </Link>

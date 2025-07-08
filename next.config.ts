@@ -11,16 +11,9 @@ const nextConfig:NextConfig = {
     typescript: {
         ignoreBuildErrors: true, // 构建时忽略 TypeScript 错误
     },
-    productionBrowserSourceMaps: true,
+    // productionBrowserSourceMaps: true,
     // webpack: (config) => {
     //     config.resolve.alias['rehype-react'] = path.resolve(__dirname, 'node_modules/rehype-react');
-    //     return config;
-    // },
-    // webpack(config) {
-    //     config.module.rules.push({
-    //         test: /\.svg$/,
-    //         use: ["@svgr/webpack"]
-    //     });
     //     return config;
     // },
     trailingSlash: true, // 强制路径以斜杠结尾，避免路由冲突
@@ -32,14 +25,16 @@ const nextConfig:NextConfig = {
     turbopack: {
         // ...
     },
-    // 按需添加编译缓存（大型项目提速 50%+）
-    //         experimental: {
-    //             turbo: {
-    //                 resolveAlias: {}, // 示例配置
-    //                 rules: {},
-    //             }
-    //         }
-
+    // 关键：禁用所有实验性功能
+    // experimental: {
+    //     // serverActions: false,
+    //     optimizeCss: false,
+    //     disableOptimizedLoading: true,
+    //     // isrMemoryCacheSize: 0,
+    // },
+    // // 禁用 RSC 相关功能
+    // transpilePackages: [],
+    // modularizeImports: {},
 };
 module.exports = nextConfig;
 

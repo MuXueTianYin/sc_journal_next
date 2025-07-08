@@ -31,7 +31,7 @@ const DocContent: React.FC<DocContentProps> = ({
     return (
         <Card className="p-6 md:p-8 lg:p-10 bg-white dark:bg-gray-900 border-none shadow-none">
             <article className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-blockquote:border-l-blue-600 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-pre:bg-gray-900 prose-pre:rounded-xl">
-                <div className="flex justify-center items-center ">
+                <div className="flex justify-center items-center pb-10">
                     <div className="flex-1 text-xl ">主题选择:</div>
                     <Select onValueChange={handleValueChange}>
                         <SelectTrigger className="w-[180px]">

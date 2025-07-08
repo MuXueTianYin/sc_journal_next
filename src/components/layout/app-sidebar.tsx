@@ -1,5 +1,5 @@
 // import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
-'use client';
+"use client";
 import {
     Sidebar,
     SidebarContent,
@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/sidebar"
 import Link from "next/link";
 import React from "react";
-import {Doc} from "@/lib/docs";
 import {usePathname} from "next/navigation";
+import {Diary} from "@/utils/content/utils";
 
 
 // const items = [
@@ -45,11 +45,13 @@ import {usePathname} from "next/navigation";
 // ]
 interface Props {
     // doc: Doc;
-    docs: Doc[];
+    docs: Diary[];
 }
 export default function AppSidebar ({docs}:Props) {
     const pathname = usePathname();
 
+    console.log(pathname)
+    console.log(docs)
 
     return (
         <Sidebar>
@@ -62,9 +64,9 @@ export default function AppSidebar ({docs}:Props) {
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <Link
-                                            href={`/docs/${item.slug}`}
+                                            href={`/diaries/${item.id}`}
                                             className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
-                                                pathname === `/docs/${item.slug}`
+                                                pathname === `/diaries/${item.id}`
                                                     ? 'bg-blue-50 text-blue-700'
                                                     : 'text-gray-700 hover:bg-gray-100'
                                             }`}
