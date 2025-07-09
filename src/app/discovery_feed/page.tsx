@@ -2,7 +2,7 @@
 import PostCard from '@/components/layout/PostCard';
 import MainNav from '@/components/layout/MainNav';
 // import BottomNav from '@/components/layout/BottomNav';
-import { getImagePath } from '@/utils/pathUtils';
+import {getImagePath} from '@/utils/pathUtils';
 
 const navItems = [
     {id: 1, name: "推荐"},
@@ -75,9 +75,9 @@ const posts = [
     },
     {
         id: 2,
-        username: "小红书情感局",
-        title: "恋爱段位排行榜（真实版）",
-        content: `青铜：会发早安\n白银：会记生日\n黄金：会送小礼物\n王者：会突然说“我爱你”\n#恋爱段位 #情侣日常`,
+        username: "我想你了",
+        title: "澄澄是最最最最美的",
+        content: `不仅美，而且温柔，还善良，善解人意。聪明，仔细，努力低调等等`,
         likes: 1865,
         comments: 245,
         tags: ["恋爱段位", "情侣日常"],
@@ -87,8 +87,10 @@ const posts = [
     {
         id: 3,
         username: "momo",
-        title: "男友的微信备注让我哭笑不得",
-        content: `他的备注是：“人间小甜豆（已过期）”。\n我问为什么加括号，他说：“因为你总嫌弃我发糖太晚。”\n#恋爱趣事 #男友日常`,
+        title: "陪在你身边当你的废话大王",
+        content: `说永远只希望每天的明天你都在\n
+                无论多久我们还是我们说好了玩一辈子\n
+                你不仅是我的朋友 你也是我亲自挑选的家人`,
         likes: 8715,
         comments: 1204,
         tags: ["恋爱趣事", "男友日常"],
@@ -98,8 +100,9 @@ const posts = [
     {
         id: 4,
         username: "浪漫制造机",
-        title: "开发一个“爱情盲盒”小程序",
-        content: `每天随机生成一句情话，附带一张你们的照片。\n比如：“今天你的眼睛比上次更亮了～”\n#情侣开发 #创意礼物`,
+        title: "生活原本沉闷，但跑起来会有风。",
+        content: `记得把普通的日子过得浪漫一些\n
+                   糖的滋味，甜蜜而温暖。所有美好的一切`,
         likes: 61,
         comments: 8,
         tags: ["情侣开发", "创意礼物"],
@@ -120,8 +123,8 @@ const posts = [
     {
         id: 6,
         username: "恋爱脑研究所",
-        title: "情侣必看的“吵架修复”小程序",
-        content: `输入“你总是忽略我”，他会生成：“抱歉！我刚刚在想你发的那条朋友圈。”\n#恋爱技巧 #情侣日常`,
+        title: "互相治癒❤️‍🩹對方",
+        content: `我想守护你，守护你一辈子`,
         likes: 61,
         comments: 8,
         tags: ["恋爱技巧", "情侣日常"],
@@ -151,7 +154,6 @@ const posts = [
         imageUrl: getImagePath("/assets/cc/IMG20250614164551.jpg"),
     },
 ];
-
 
 
 export default function DiscoveryFeed() {
