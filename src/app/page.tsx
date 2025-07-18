@@ -34,7 +34,7 @@ export default function Home() {
             // 4. 精准计算时间（一次性推导）
             // const totalSeconds = Math.floor(diffMs / 1000);
 
-            const days = diffMs / (1000 * 60 * 60 * 24); // ≈38.23天
+            const days = diffMs / (1000 * 60 * 60 * 24);
             const hours = days * 24;
             const minutes = hours * 60;
             setDaysInLove(Math.floor(days));
@@ -172,13 +172,14 @@ export default function Home() {
                         <div className="flex justify-center space-x-4">
                             <Button
                                 className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-6 text-lg"
-                                onClick={() => router.push('/discovery_feed')}
+
                             >
                                 记录今日心动 →
                             </Button>
                             <Button
                                 className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-6 text-lg"
                                 variant="outline"
+                                onClick={() => router.push('/discovery_feed')}
                             >
                                 查看甜蜜相册
                             </Button>
