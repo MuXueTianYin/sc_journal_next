@@ -1,86 +1,47 @@
-// import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
 "use client";
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link";
-import React from "react";
-import {usePathname} from "next/navigation";
-import {Diary} from "@/utils/content/utils";
 
+import Link from 'next/link';
+import React, { useMemo } from 'react';
+import { usePathname } from 'next/navigation';
+import { Diary } from '@/utils/content/utils';
 
-// const items = [
-//     {
-//         title: "Home",
-//         url: "#",
-//         icon: Home,
-//     },
-//     {
-//         title: "Inbox",
-//         url: "#",
-//         icon: Inbox,
-//     },
-//     {
-//         title: "Calendar",
-//         url: "#",
-//         icon: Calendar,
-//     },
-//     {
-//         title: "Search",
-//         url: "#",
-//         icon: Search,
-//     },
-//     {
-//         title: "Settings",
-//         url: "#",
-//         icon: Settings,
-//     },
-// ]
 interface Props {
-    // doc: Doc;
-    docs: Diary[];
+  docs: Diary[];
+  onNavigate?: () => void;
 }
-export default function AppSidebar ({docs}:Props) {
-    const pathname = usePathname();
 
-    console.log(pathname)
-    console.log(docs)
+function getDiaryDate(diary: Diary) {
+  if (!diary.date) return 0;
+  const time = new Date(diary.date).getTime();
+  return Number.isNaN(time) ? 0 : time;
+}
 
-    return (
-        <Sidebar>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {docs.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link
-                                            href={`/diaries/${item.id}`}
-                                            className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
-                                                pathname === `/diaries/${item.id}`
-                                                    ? 'bg-blue-50 text-blue-700'
-                                                    : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >
-                                            {/*<item.icon />*/}
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-            </SidebarContent>
-        </Sidebar>
-    )
+export default function AppSidebar({ docs, onNavigate }: Props) {
+  const pathname = usePathname();
+  const sortedDocs = useMemo(() => [...docs].sort((a, b) => getDiaryDate(a) - getDiaryDate(b)), [docs]);
+
+  return (
+    <nav className="flex h-full flex-col bg-white" aria-label="章节目录">
+      <div className="flex-1 overflow-y-auto px-3 py-3">
+        <div className="space-y-1">
+          {sortedDocs.map((item, index) => {
+            const active = pathname === `/diaries/${item.id}`;
+            return (
+              <Link
+                key={item.id}
+                href={`/diaries/${item.id}`}
+                onClick={onNavigate}
+                className={`block rounded-xl px-3 py-2 text-sm transition ${active ? 'bg-rose-50 font-medium text-rose-700 ring-1 ring-rose-200' : 'text-gray-700 hover:bg-gray-100'}`}
+                aria-current={active ? 'page' : undefined}
+              >
+                <span className="block line-clamp-2">
+                  {index + 1}. {item.title}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </nav>
+  );
 }

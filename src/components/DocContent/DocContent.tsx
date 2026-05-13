@@ -1,83 +1,165 @@
 'use client';
-import React, {Suspense, useState} from 'react';
-import {Card} from '@/components/ui/card';
-import {format} from 'date-fns';
-import {zhCN} from 'date-fns/locale';
+import React, { Suspense, useMemo, useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { format } from 'date-fns';
+import { zhCN } from 'date-fns/locale';
 import 'highlight.js/styles/github-dark.css';
-import MdViewer from "@/components/Markdown/MdViewer";
-import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select"
-import {themeList} from "bytemd-plugin-theme";
-
+import MdViewer from '@/components/Markdown/MdViewer';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { themeList } from 'bytemd-plugin-theme';
+import Link from 'next/link';
+import { Diary } from '@/utils/content/utils';
 
 interface DocContentProps {
-    title?: string;
-    content: string;
-    tags?: string[];
+  title?: string;
+  content: string;
+  date?: string;
+  excerpt?: string;
+  tags?: string[];
+  prevDiary?: Diary | null;
+  nextDiary?: Diary | null;
 }
 
-
-
-
 const DocContent: React.FC<DocContentProps> = ({
-                                                   content,
-                                               }) => {
-    // const formattedDate = date ? format(new Date(date), 'yyyy年MM月dd日', { locale: zhCN }) : '';
-    const [themeValue, setThemeValue] = useState<string>("channing-cyan");
-    const handleValueChange = (value: string) => {
-        console.log("Selected:", value);
-        // 执行后续操作
-        setThemeValue(value)
-    };
-    return (
-        <Card className="p-6 md:p-8 lg:p-10 bg-white dark:bg-gray-900 border-none shadow-none">
-            <article className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-blockquote:border-l-blue-600 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-pre:bg-gray-900 prose-pre:rounded-xl">
-                <div className="flex justify-center items-center pb-10">
-                    <div className="flex-1 text-xl ">主题选择:</div>
-                    <Select onValueChange={handleValueChange}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Select a Theme" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {themeList.map((item) => (
-                                    <SelectItem value={item.theme || ""} key={item.theme}>
-                                        {item.title}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <Suspense fallback={<div>加载更多...</div>}>
-                    <MdViewer value={content} theme={themeValue} />
-                </Suspense>
-            </article>
+  title,
+  content,
+  date,
+  excerpt,
+  tags,
+  prevDiary,
+  nextDiary,
+}) => {
+  const [themeValue, setThemeValue] = useState<string>('channing-cyan');
+  const formattedDate = date ? format(new Date(date), 'yyyy年MM月dd日', { locale: zhCN }) : '';
 
-            <div
-                className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-wrap justify-between items-center">
-                <div className="flex items-center text-gray-600 dark:text-gray-400 mb-4 md:mb-0">
-                    <span className="mr-2">📝</span>
-                    <span>最后更新于 {format(new Date(), 'yyyy年MM月dd日', {locale: zhCN})}</span>
-                </div>
+  const tocTarget = useMemo(() => {
+    return content.replace(/^---[\s\S]*?---\s*/m, '').trim();
+  }, [content]);
 
-                <div className="flex space-x-4">
-                    <button
-                        className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                        </svg>
-                        收藏
-                    </button>
-                    <button className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="CurrentColor">
-                            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-                        </svg>
-                        分享
-                    </button>
-                </div>
-            </div>
-        </Card>
-    );
+  return (
+    <Card className="border-none bg-white p-4 shadow-none md:p-6 lg:p-10 dark:bg-gray-900">
+      <div className="mb-8 rounded-2xl border border-rose-100 bg-rose-50/70 p-5 md:p-6 dark:border-rose-900 dark:bg-rose-950/20">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-sm font-medium text-rose-500">章节封面</p>
+            <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">{title}</h1>
+            {formattedDate ? <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">记录于 {formattedDate}</p> : null}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/diaries" className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+              返回目录
+            </Link>
+            <Link href="/" className="rounded-full bg-rose-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-rose-600">
+              返回首页
+            </Link>
+          </div>
+        </div>
+        {excerpt ? <p className="mt-4 text-sm leading-7 text-gray-600 dark:text-gray-300">{excerpt}</p> : null}
+        {tags?.length ? (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <span key={tag} className="rounded-full bg-white px-3 py-1 text-xs text-rose-600 border border-rose-100 dark:bg-gray-800 dark:border-gray-700 dark:text-rose-300">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
+
+      <section className="diary-markdown rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950/40 md:p-6 lg:p-8">
+        <div className="mb-4 flex flex-col gap-3 pb-4 md:flex-row md:items-center md:justify-between">
+          <div className="text-lg font-medium md:text-xl">阅读主题</div>
+          <Select onValueChange={setThemeValue} value={themeValue}>
+            <SelectTrigger className="w-full md:w-[220px]">
+              <SelectValue placeholder="选择一个主题" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {themeList.map((item) => (
+                  <SelectItem value={item.theme || ''} key={item.theme}>
+                    {item.title}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <Suspense fallback={<div>加载更多...</div>}>
+          <MdViewer value={tocTarget} theme={themeValue} />
+        </Suspense>
+      </section>
+
+      <div className="mt-12 flex flex-col gap-6 border-t border-gray-200 pt-8 dark:border-gray-800">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center text-gray-600 dark:text-gray-400">
+            <span className="mr-2">📝</span>
+            <span>最后更新于 {formattedDate || '未知时间'}</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <NavCard
+            label="上一篇"
+            title={prevDiary?.title}
+            href={prevDiary ? `/diaries/${prevDiary.id}` : undefined}
+            emptyText="已经是更早的章节了"
+          />
+          <NavCard
+            label="下一篇"
+            title={nextDiary?.title}
+            href={nextDiary ? `/diaries/${nextDiary.id}` : undefined}
+            emptyText="已经是最新的章节了"
+            alignRight
+          />
+        </div>
+      </div>
+    </Card>
+  );
 };
+
+function NavCard({
+  label,
+  title,
+  href,
+  emptyText,
+  alignRight,
+}: {
+  label: string;
+  title?: string;
+  href?: string;
+  emptyText: string;
+  alignRight?: boolean;
+}) {
+  const content = title ? (
+    <>
+      <p className="mb-1 text-sm text-rose-500">{label}</p>
+      <p className="line-clamp-1 font-medium text-gray-900 dark:text-white">{title}</p>
+    </>
+  ) : (
+    <>
+      <p className="mb-1 text-sm text-gray-400">{label}</p>
+      <p className="font-medium text-gray-500 dark:text-gray-400">{emptyText}</p>
+    </>
+  );
+
+  const className = `rounded-2xl border border-gray-200 p-4 transition-colors ${alignRight ? 'text-right' : ''} ${href ? 'hover:border-rose-300 hover:bg-rose-50/40 dark:hover:bg-rose-950/10' : 'bg-gray-50 dark:bg-gray-800/60'}`;
+
+  if (!href) {
+    return <div className={className}>{content}</div>;
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {content}
+    </Link>
+  );
+}
 
 export default DocContent;

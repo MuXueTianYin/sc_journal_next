@@ -10,7 +10,25 @@ import {TocItem} from "@/lib/docs";
 // 将 id-map.json 移到 public 目录外
 const dataDirectory = path.join(process.cwd(), 'data');
 const diariesDirectory = path.join(process.cwd(), 'public/assets/docs');
-const idMapPath = path.join(dataDirectory, 'id-map.json'); // 修改存储位置
+const idMapPath = path.join(dataDirectory, 'id-map.json');
+
+function stripMarkdown(text: string) {
+    return text
+        .replace(/^---[\s\S]*?---\s*/m, '')
+        .replace(/```[\s\S]*?```/g, ' ')
+        .replace(/<img\b[^>]*>/gi, ' ')
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
+        .replace(/[#>*_`~-]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function makeExcerpt(content: string, title?: string) {
+    const cleaned = stripMarkdown(content);
+    if (!cleaned) return title || '';
+    return cleaned.slice(0, 180);
+}
 
 // 确保目录存在
 if (!fs.existsSync(dataDirectory)) {
@@ -19,10 +37,13 @@ if (!fs.existsSync(dataDirectory)) {
 
 export interface Diary {
     id: string;
-    neme: string;
+    name: string;
     title: string;
     content: string;
     resultToc?: TocItem[];
+    date?: string;
+    excerpt?: string;
+    tags?: string[];
 }
 
 function generateStableId(filePath: string, content: string): string {
@@ -45,7 +66,7 @@ export function getAllDiaries(): Diary[] {
     }
 
     const diaries = fileNames.map((fileName) => {
-        const neme = fileName.replace(/\.md$/, '');
+        const name = fileName.replace(/\.md$/, '');
         const fullPath = path.join(diariesDirectory, fileName);
 
         try {
@@ -64,10 +85,13 @@ export function getAllDiaries(): Diary[] {
 
             return {
                 id,
-                neme,
-                title: matterResult.data.title || neme,
-                content: fileContents,
-                resultToc
+                name,
+                title: matterResult.data.title || name,
+                content: matterResult.content,
+                resultToc,
+                date: matterResult.data.date,
+                excerpt: matterResult.data.excerpt || makeExcerpt(matterResult.content, matterResult.data.title || name),
+                tags: matterResult.data.tags,
             };
         } catch (error) {
             console.error(`处理文件 ${fileName} 时出错:`, error);
@@ -113,10 +137,13 @@ export async function getDiaryById(id: string): Promise<Diary | null> {
 
         return {
             id,
-            neme: fileName.replace(/\.md$/, ''),
+            name: fileName.replace(/\.md$/, ''),
             title: matterResult.data.title || fileName.replace(/\.md$/, ''),
-            content: fileContents,
+            content: matterResult.content,
             resultToc,
+            date: matterResult.data.date,
+            excerpt: matterResult.data.excerpt || makeExcerpt(matterResult.content, matterResult.data.title || fileName.replace(/\.md$/, '')),
+            tags: matterResult.data.tags,
         };
     } catch (error) {
         console.error(`读取文件 ${fileName} (ID: ${id}) 时出错:`, error);

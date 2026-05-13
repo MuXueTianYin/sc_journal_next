@@ -1,55 +1,67 @@
-import Link from 'next/link';
-import {Diary} from "@/utils/content/utils";
+"use client";
 
+import Link from 'next/link';
+import React, { useMemo } from 'react';
+import { Diary } from '@/utils/content/utils';
 
 interface DiaryNavigationProps {
-    diaries: Diary[];
-    currentId?: string;
+  diaries: Diary[];
+  currentId?: string;
+  onNavigate?: () => void;
 }
 
-const DiaryNavigation: React.FC<DiaryNavigationProps> = ({ diaries, currentId }) => {
-    return (
-        <nav>
-            <div className="mb-4">
-                <input
-                    type="text"
-                    placeholder="搜索日记..."
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-                />
-            </div>
+function getDiaryDate(diary: Diary) {
+  if (!diary.date) return 0;
+  const time = new Date(diary.date).getTime();
+  return Number.isNaN(time) ? 0 : time;
+}
 
-            <div className="space-y-3">
-                {diaries.map((diary) => (
-                    <Link
-                        key={diary.id}
-                        href={`/diaries/${diary.id}`}
-                        className={`block p-4 rounded-xl transition-all ${
-                            currentId === diary.id
-                                ? 'bg-pink-100 dark:bg-pink-900/30 border border-pink-300 dark:border-pink-700'
-                                : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'
-                        }`}
-                    >
-                        <h3 className={`font-medium ${
-                            currentId === diary.id
-                                ? 'text-pink-700 dark:text-pink-300'
-                                : 'text-gray-800 dark:text-gray-200'
-                        }`}>
-                            {diary.title}
-                        </h3>
-                        <div className="text-sm mt-1 flex items-center">
-              <span className="text-gray-500 dark:text-gray-400">
-                {/*{format(new Date(diary.date), 'yyyy年MM月dd日', { locale: zhCN })}*/}
-              </span>
-                            <span className="mx-2 text-gray-300 dark:text-gray-600">•</span>
-                            <span className="text-pink-500">
-                {/*{diary.excerpt.slice(0, 20)}...*/}
-              </span>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-        </nav>
-    );
+function formatDate(date?: string) {
+  if (!date) return '未记录时间';
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return '未记录时间';
+  return parsed.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+}
+
+const DiaryNavigation: React.FC<DiaryNavigationProps> = ({ diaries, currentId, onNavigate }) => {
+  const sortedDiaries = useMemo(() => [...diaries].sort((a, b) => getDiaryDate(b) - getDiaryDate(a)), [diaries]);
+
+  return (
+    <nav className="space-y-3" aria-label="章节目录">
+      <div className="max-h-[calc(100vh-260px)] space-y-2 overflow-y-auto pr-1">
+        {sortedDiaries.map((diary, index) => {
+          const active = diary.id === currentId;
+          return (
+            <Link
+              key={diary.id}
+              href={`/diaries/${diary.id}`}
+              onClick={onNavigate}
+              aria-current={active ? 'page' : undefined}
+              className={`block rounded-xl border px-4 py-3 transition-all focus:outline-none focus:ring-2 focus:ring-rose-300 ${
+                active
+                  ? 'border-rose-300 bg-rose-50 shadow-sm dark:border-rose-700 dark:bg-rose-950/30'
+                  : 'border-gray-200 bg-white hover:border-rose-200 hover:bg-rose-50/40 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-rose-700 dark:hover:bg-rose-950/20'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-gray-900 dark:text-white">
+                    {index + 1}. {diary.title}
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{formatDate(diary.date)}</p>
+                </div>
+                {active ? <span className="shrink-0 rounded-full bg-rose-500 px-2.5 py-1 text-[11px] font-medium text-white">当前</span> : null}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
 };
 
 export default DiaryNavigation;

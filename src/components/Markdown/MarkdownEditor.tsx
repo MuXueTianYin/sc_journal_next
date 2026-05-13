@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
@@ -7,7 +7,6 @@ import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import Markdown from 'markdown-to-jsx';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dracula, github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 // 组件属性类型定义
 interface MarkdownEditorProps {
@@ -15,8 +14,6 @@ interface MarkdownEditorProps {
     initialContent?: string;
     /** 编辑区标题 */
     editorTitle?: string;
-    /** 预览区标题 */
-    previewTitle?: string;
     /** 自定义主题 ('light' | 'dark') */
     customTheme?: 'light' | 'dark';
     /** Markdown 内容变化时的回调函数 */
@@ -33,7 +30,6 @@ interface ImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                                                            initialContent = '',
                                                            editorTitle = 'Markdown 输入',
-                                                           previewTitle = '预览',
                                                            customTheme,
                                                            onContentChange,
                                                            className = ''
@@ -42,8 +38,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     const [jsxOutput, setJsxOutput] = useState<React.ReactNode>(null);
     const [htmlOutput, setHtmlOutput] = useState<string>('');
     const [activeTab, setActiveTab] = useState<'jsx' | 'html'>('jsx');
-    const previewRef = useRef<HTMLDivElement>(null);
-    const editorRef = useRef<ReactCodeMirrorRef>(null);
 
     // 使用自定义主题或根据系统偏好设置主题
     const effectiveTheme = customTheme || 'light';
@@ -129,13 +123,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         }
     }, [markdownContent, convertMarkdownToJSX, onContentChange]);
 
-    // 同步滚动功能
-    const handleEditorScroll = useCallback((scrollTop: number) => {
-        if (previewRef.current) {
-            previewRef.current.scrollTop = scrollTop;
-        }
-    }, []);
-
     return (
         <div className={`flex flex-col h-full bg-gray-50 dark:bg-gray-900 ${className}`}>
             <div className="flex flex-1 overflow-hidden">
@@ -146,7 +133,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     </div>
                     <div className="flex-1 overflow-hidden">
                         <CodeMirror
-                            ref={editorRef}
                             value={markdownContent}
                             height="100%"
                             theme={effectiveTheme === 'dark' ? githubDark : githubLight}
@@ -157,7 +143,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                                 })
                             ]}
                             onChange={(value) => setMarkdownContent(value)}
-                            onScroll={(event) => handleEditorScroll(event.currentTarget.scrollTop)}
                             className="h-full text-base"
                         />
                     </div>

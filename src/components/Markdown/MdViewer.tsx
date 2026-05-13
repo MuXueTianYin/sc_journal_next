@@ -51,7 +51,7 @@ const MdViewer = (props: Props) => {
 
     return (
         <div className="md-viewer">
-            <Viewer value={value} plugins={plugins} />
+            <Viewer value={value} plugins={plugins} className="markdown-body" />
         </div>
     );
 };
