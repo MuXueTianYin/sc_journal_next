@@ -1,0 +1,79 @@
+.valentine-page {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #ffe4e6, #fbcfe8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 16px 32px;
+  overflow: hidden;
+}
+
+.valentine-back {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.valentine-question {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #881337;
+  margin-bottom: 48px;
+  text-align: center;
+  max-width: 320px;
+}
+
+.valentine-buttons {
+  position: relative;
+  width: min(320px, 100%);
+  height: 120px;
+}
+
+.valentine-yes {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 9999px;
+  background: #e11d48;
+  color: white;
+  font-size: 1.125rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+}
+
+.valentine-no {
+  position: absolute;
+  padding: 10px 24px;
+  border: 2px solid #fda4af;
+  border-radius: 9999px;
+  background: white;
+  color: #881337;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: left 0.15s, top 0.15s;
+}
+
+.valentine-success {
+  font-size: 1.25rem;
+  color: #e11d48;
+  text-align: center;
+  animation: valentine-pop 0.5s ease;
+}
+
+@keyframes valentine-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

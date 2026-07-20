@@ -1,0 +1,655 @@
+.bgm-player {
+  position: fixed;
+  top: 64px;
+  left: 16px;
+  right: auto;
+  z-index: 20;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.bgm-player.fullscreen {
+  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 10, 20, 0.72);
+}
+
+.bgm-player-container {
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  padding-bottom: 56px;
+}
+
+.bgm-player.fullscreen .bgm-player-container {
+  max-width: min(520px, 100%);
+}
+
+.bgm-card {
+  background: rgba(25, 25, 40, 0.92);
+  backdrop-filter: blur(16px);
+  border-radius: 25px;
+  padding: 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  position: relative;
+}
+
+.bgm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.bgm-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bgm-fullscreen-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+}
+
+.bgm-fullscreen-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.bgm-music-info {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.bgm-cover {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: bgm-rotate-album 20s linear infinite;
+  animation-play-state: paused;
+  pointer-events: none;
+}
+
+.bgm-cover.playing {
+  animation-play-state: running;
+}
+
+.bgm-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+@keyframes bgm-rotate-album {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.bgm-song-name {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bgm-artist-name {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.bgm-time-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+.bgm-progress-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  touch-action: none;
+}
+
+.bgm-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  border-radius: 10px;
+  width: 0;
+  transition: width 0.1s linear;
+}
+
+.bgm-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.bgm-control-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.bgm-control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.bgm-play-btn {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+
+.bgm-play-btn:hover {
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+}
+
+.bgm-lyrics {
+  height: 120px;
+  overflow-y: auto;
+  text-align: center;
+  padding: 8px 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  scroll-behavior: smooth;
+}
+
+.bgm-player.fullscreen .bgm-lyrics {
+  height: 180px;
+}
+
+.bgm-lyric-line {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 6px 4px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+}
+
+.bgm-lyric-line:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.bgm-lyric-line.active {
+  color: #fff;
+  font-weight: 600;
+  transform: scale(1.04);
+}
+
+.bgm-lyrics::-webkit-scrollbar {
+  width: 4px;
+}
+
+.bgm-lyrics::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+}
+
+.bgm-decoration {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 75, 43, 0.1), rgba(255, 65, 108, 0.1));
+  top: -100px;
+  left: -100px;
+  z-index: -1;
+}
+
+.bgm-decoration-right {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(26, 42, 108, 0.1), rgba(178, 31, 31, 0.1));
+  bottom: -75px;
+  right: -75px;
+  z-index: -1;
+}
+
+.bgm-playlist-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(25, 25, 40, 0.9);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bgm-playlist-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.bgm-volume-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(25, 25, 40, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bgm-volume-slider {
+  width: 100px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.bgm-volume-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.bgm-playlist-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.bgm-playlist-panel {
+  width: 340px;
+  max-width: 100%;
+  max-height: 520px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
+  background: rgba(25, 25, 35, 0.95);
+  color: #fff;
+}
+
+.bgm-playlist-title {
+  padding: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  background: rgba(40, 40, 60, 0.7);
+  position: relative;
+}
+
+.bgm-close-playlist {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bgm-close-playlist:hover {
+  color: #ff4b2b;
+  transform: scale(1.1);
+}
+
+.bgm-playlist-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.bgm-playlist-item {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.bgm-playlist-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.bgm-playlist-item.playing {
+  background: rgba(255, 75, 43, 0.2);
+  color: #ff4b2b;
+}
+
+.bgm-playlist-index {
+  width: 30px;
+  font-size: 16px;
+  opacity: 0.7;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.bgm-playlist-info {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.bgm-playlist-song-title {
+  font-size: 16px;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bgm-playlist-song-artist {
+  font-size: 13px;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bgm-playlist-duration {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-left: 10px;
+  min-width: 50px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.bgm-playlist-playing-icon {
+  color: #ff4b2b;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.bgm-playlist-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bgm-playlist-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.bgm-playlist-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.bgm-playlist-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.bgm-compact-actions {
+  display: none;
+}
+
+.bgm-meta {
+  min-width: 0;
+}
+
+/* 简洁条：移动端默认 / startCollapsed 桌面端 —— 按内容收窄，左下浮动 */
+.bgm-player.is-mini {
+  top: auto;
+  bottom: 16px;
+  left: 12px;
+  right: auto;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+}
+
+.bgm-player.is-mini .bgm-player-container {
+  width: max-content;
+  max-width: 100%;
+  padding-bottom: 0;
+}
+
+.bgm-player.is-mini .bgm-card {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-areas:
+    "cover meta controls actions"
+    "progress progress progress progress";
+  align-items: center;
+  gap: 8px 8px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  width: max-content;
+  max-width: 100%;
+}
+
+.bgm-player.is-mini .bgm-decoration,
+.bgm-player.is-mini .bgm-decoration-right,
+.bgm-player.is-mini .bgm-header,
+.bgm-player.is-mini .bgm-lyrics,
+.bgm-player.is-mini .bgm-artist-name,
+.bgm-player.is-mini .bgm-time-range,
+.bgm-player.is-mini .bgm-volume-container,
+.bgm-player.is-mini .bgm-playlist-btn {
+  display: none;
+}
+
+.bgm-player.is-mini .bgm-music-info {
+  display: contents;
+  margin: 0;
+}
+
+.bgm-player.is-mini .bgm-cover {
+  grid-area: cover;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border-width: 2px;
+  animation: none;
+}
+
+.bgm-player.is-mini .bgm-meta {
+  grid-area: meta;
+  text-align: left;
+  min-width: 0;
+  max-width: 7.5em;
+}
+
+.bgm-player.is-mini .bgm-song-name {
+  font-size: 13px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bgm-player.is-mini .bgm-progress-bar {
+  grid-area: progress;
+  height: 3px;
+  margin-top: 2px;
+}
+
+.bgm-player.is-mini .bgm-controls {
+  grid-area: controls;
+  gap: 4px;
+  margin: 0;
+}
+
+.bgm-player.is-mini .bgm-control-btn {
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+}
+
+.bgm-player.is-mini .bgm-play-btn {
+  width: 36px;
+  height: 36px;
+}
+
+.bgm-player.is-mini .bgm-control-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.bgm-player.is-mini .bgm-play-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bgm-player.is-mini .bgm-compact-actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 简洁条隐藏列表入口，保留展开 */
+.bgm-player.is-mini .bgm-compact-actions .bgm-compact-icon-btn:first-child {
+  display: none;
+}
+
+.bgm-compact-icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  /* 移动端全屏：完整播放器 */
+  .bgm-player.fullscreen {
+    inset: 0;
+    padding: 12px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    align-items: stretch;
+    justify-content: center;
+    background: rgba(10, 10, 20, 0.88);
+  }
+
+  .bgm-player.fullscreen .bgm-player-container {
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 56px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bgm-player.fullscreen .bgm-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    overflow: auto;
+  }
+
+  .bgm-player.fullscreen .bgm-cover {
+    width: min(220px, 56vw);
+    height: min(220px, 56vw);
+  }
+
+  .bgm-player.fullscreen .bgm-lyrics {
+    flex: 1;
+    height: auto;
+    min-height: 140px;
+    max-height: none;
+  }
+
+  .bgm-player.fullscreen .bgm-compact-actions {
+    display: none;
+  }
+
+  .bgm-playlist-overlay {
+    z-index: 70;
+  }
+}

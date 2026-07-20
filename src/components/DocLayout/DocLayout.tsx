@@ -47,9 +47,9 @@ const DocLayout: React.FC<DocLayoutProps> = ({ doc, docs }) => {
       <div className="flex flex-1 overflow-hidden">
         <aside className={`hidden md:block md:flex-none md:border-r md:border-gray-200 md:bg-white ${desktopOpen ? 'md:w-80' : 'md:w-0 md:overflow-hidden'}`}>
           {desktopOpen ? (
-            <div className="h-[calc(100vh-4rem)] overflow-y-auto bg-white p-4">
+            <div className="h-[calc(100vh-4rem)] overflow-y-auto bg-gradient-to-b from-rose-50/50 via-white to-white p-4">
               <div className="mb-3 flex items-center justify-end">
-                <button type="button" className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600" onClick={() => setDesktopOpen(false)}>
+                <button type="button" className="rounded-full bg-white/70 px-3 py-1 text-sm text-gray-600 shadow-sm ring-1 ring-gray-200/80 backdrop-blur" onClick={() => setDesktopOpen(false)}>
                   关闭
                 </button>
               </div>

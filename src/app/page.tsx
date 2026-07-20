@@ -83,7 +83,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="hidden items-center gap-8 md:flex">
+            <div className="hidden max-w-xl flex-1 items-center justify-end gap-4 overflow-x-auto whitespace-nowrap scrollbar-hide md:flex lg:max-w-none lg:flex-wrap lg:justify-center">
               <Link className="font-medium text-gray-600 hover:text-rose-500" href="/">
                 封面
               </Link>
@@ -92,6 +92,30 @@ export default function Home() {
               </Link>
               <Link className="font-medium text-gray-600 hover:text-rose-500" href="/discovery_feed">
                 留影集
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/heart_tree">
+                心形树
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/album_3d">
+                立体相册
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/love_letter">
+                情书
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/starry_night">
+                星空
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/valentine">
+                趣味表白
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/countdown">
+                倒计时
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/flipbook">
+                翻页册
+              </Link>
+              <Link className="font-medium text-gray-600 hover:text-rose-500" href="/gift">
+                神秘礼物
               </Link>
             </div>
 
@@ -126,12 +150,36 @@ export default function Home() {
               这里是属于我们的时光纪念册，章节、留影和年表都被安静地整理在这里。
             </p>
 
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row sm:flex-wrap">
               <Button className="bg-rose-500 px-8 py-6 text-lg text-white hover:bg-rose-600" onClick={() => router.push('/diaries')}>
                 翻阅章节 →
               </Button>
               <Button className="border border-gray-300 bg-white px-8 py-6 text-lg text-gray-700 hover:bg-gray-50" variant="outline" onClick={() => router.push('/discovery_feed')}>
                 查看留影集
+              </Button>
+              <Button className="border border-rose-200 bg-white px-8 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/heart_tree')}>
+                心形树
+              </Button>
+              <Button className="border border-rose-200 bg-white px-8 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/album_3d')}>
+                立体相册
+              </Button>
+              <Button className="border border-rose-200 bg-white px-6 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/love_letter')}>
+                情书
+              </Button>
+              <Button className="border border-rose-200 bg-white px-6 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/starry_night')}>
+                星空
+              </Button>
+              <Button className="border border-rose-200 bg-white px-6 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/valentine')}>
+                趣味表白
+              </Button>
+              <Button className="border border-rose-200 bg-white px-6 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/countdown')}>
+                倒计时
+              </Button>
+              <Button className="border border-rose-200 bg-white px-6 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/flipbook')}>
+                翻页册
+              </Button>
+              <Button className="border border-rose-200 bg-white px-6 py-6 text-lg text-rose-600 hover:bg-rose-50" variant="outline" onClick={() => router.push('/gift')}>
+                神秘礼物
               </Button>
             </div>
           </div>
@@ -284,6 +332,46 @@ export default function Home() {
                     留影集
                   </Link>
                 </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/heart_tree">
+                    心形树
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/album_3d">
+                    立体相册
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/love_letter">
+                    情书
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/starry_night">
+                    星空
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/valentine">
+                    趣味表白
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/countdown">
+                    倒计时
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/flipbook">
+                    翻页册
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-gray-400 hover:text-white" href="/gift">
+                    神秘礼物
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -306,9 +394,17 @@ export default function Home() {
 
           <div className="mt-12 flex flex-col items-center justify-between border-t border-gray-800 pt-8 md:flex-row">
             <p className="text-gray-400">© {new Date().getFullYear()} 澄心·时光纪念册</p>
-            <div className="mt-4 flex space-x-6 md:mt-0">
+            <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 md:mt-0 md:justify-end">
               <Link href="/diaries" className="text-gray-400 hover:text-white">章节</Link>
               <Link href="/discovery_feed" className="text-gray-400 hover:text-white">留影集</Link>
+              <Link href="/heart_tree" className="text-gray-400 hover:text-white">心形树</Link>
+              <Link href="/album_3d" className="text-gray-400 hover:text-white">立体相册</Link>
+              <Link href="/love_letter" className="text-gray-400 hover:text-white">情书</Link>
+              <Link href="/starry_night" className="text-gray-400 hover:text-white">星空</Link>
+              <Link href="/valentine" className="text-gray-400 hover:text-white">趣味表白</Link>
+              <Link href="/countdown" className="text-gray-400 hover:text-white">倒计时</Link>
+              <Link href="/flipbook" className="text-gray-400 hover:text-white">翻页册</Link>
+              <Link href="/gift" className="text-gray-400 hover:text-white">神秘礼物</Link>
             </div>
           </div>
         </div>

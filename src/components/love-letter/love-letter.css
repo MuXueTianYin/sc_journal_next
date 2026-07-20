@@ -1,0 +1,135 @@
+.love-letter-page {
+  min-height: 100vh;
+  background: #f5f0e8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 16px 32px;
+}
+
+@media (max-width: 768px) {
+  .love-letter-page {
+    padding-bottom: 110px;
+  }
+}
+
+.love-letter-back {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.love-letter-scene {
+  perspective: 800px;
+  width: min(320px, 90vw);
+}
+
+.love-letter-envelope {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.love-letter-envelope.open {
+  cursor: default;
+  height: 420px;
+}
+
+.love-letter-body {
+  position: absolute;
+  bottom: 20px;
+  left: 10%;
+  width: 80%;
+  height: 0;
+  background: #fffef8;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: height 0.6s ease 0.4s, bottom 0.6s ease 0.4s;
+  z-index: 1;
+}
+
+.love-letter-envelope.open .love-letter-body {
+  /* 相对原版：抬高并置于袋口之上，避免被挡住 */
+  height: 280px;
+  bottom: 150px;
+  z-index: 5;
+  overflow-y: auto;
+}
+
+.love-letter-text {
+  padding: 20px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #444;
+  font-family: '楷体', 'STKaiti', serif;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.8s;
+}
+
+.love-letter-envelope.open .love-letter-text {
+  opacity: 1;
+}
+
+.love-letter-pocket {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 140px;
+  background: #e11d48;
+  border-radius: 0 0 8px 8px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.love-letter-pocket::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-top: 70px solid #be123c;
+  transform: translateX(-50%);
+}
+
+.love-letter-flap {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: #f43f5e;
+  transform-origin: top center;
+  transition: transform 0.5s ease;
+  z-index: 3;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  pointer-events: none;
+}
+
+.love-letter-envelope.open .love-letter-flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+
+.love-letter-hint {
+  margin-top: 24px;
+  color: #888;
+  font-size: 14px;
+  text-align: center;
+}
+
+.love-letter-envelope.open + .love-letter-hint {
+  display: none;
+}

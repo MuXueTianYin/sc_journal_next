@@ -1,0 +1,242 @@
+.heart-tree-page {
+  min-height: 100vh;
+  background: #ffe;
+  color: #231f20;
+  font-size: 14px;
+  font-family: '微软雅黑', '宋体', sans-serif;
+}
+
+.heart-tree-back {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 20;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.heart-tree-wrap {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 12px 24px;
+}
+
+/* 移动端给底部简洁播放条留空，避免挡住计时 */
+@media (max-width: 768px) {
+  .heart-tree-wrap {
+    padding-bottom: 100px;
+  }
+}
+
+@media (min-width: 900px) {
+  .heart-tree-wrap {
+    flex-direction: row;
+    align-items: flex-start;
+    min-height: 680px;
+    padding-top: 10px;
+  }
+}
+
+.heart-tree-text {
+  order: 2;
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+}
+
+@media (max-width: 899px) {
+  .heart-tree-text {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .heart-tree-code {
+    text-align: center;
+  }
+
+  .heart-tree-code .sign {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .heart-tree-text {
+    order: 1;
+    position: absolute;
+    left: 60px;
+    top: 80px;
+    padding: 0;
+  }
+}
+
+.heart-tree-code {
+  display: none;
+  font-size: 16px;
+  color: #666;
+}
+
+.heart-tree-code.visible {
+  display: block;
+}
+
+.heart-tree-code h1,
+.heart-tree-code h2 {
+  color: #666;
+  font-size: 1.1em;
+  margin: 0.5em 0;
+}
+
+.heart-tree-code p {
+  margin: 0.4em 0;
+}
+
+.heart-tree-code .sign {
+  margin-left: 5px;
+}
+
+.heart-tree-canvas-wrap {
+  order: 1;
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  .heart-tree-canvas-wrap {
+    order: 2;
+    width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.heart-tree-canvas-wrap.flash {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+
+.heart-tree-canvas {
+  display: block;
+  width: 100%;
+  max-width: 1100px;
+  height: auto;
+  aspect-ratio: 1100 / 680;
+  margin: 0 auto;
+  touch-action: manipulation;
+}
+
+.heart-tree-canvas.hand {
+  cursor: pointer;
+}
+
+.heart-tree-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 58%;
+  bottom: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  pointer-events: none;
+  color: rgb(190, 26, 37);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 6px #ffe,
+    0 1px 2px rgba(255, 255, 238, 0.95);
+  animation: pulse-hint 2s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  .heart-tree-hint {
+    top: 60%;
+    font-size: 15px;
+  }
+}
+
+.heart-tree-hint.hidden {
+  display: none;
+}
+
+@keyframes pulse-hint {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.heart-tree-clock-box {
+  order: 3;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  padding: 16px 16px 24px;
+  display: none;
+  color: #33cc00;
+}
+
+@media (max-width: 768px) {
+  .heart-tree-clock-box {
+    padding-bottom: 24px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (min-width: 900px) {
+  .heart-tree-clock-box {
+    position: absolute;
+    left: 350px;
+    bottom: 100px;
+    width: auto;
+    font-size: 28px;
+    text-align: left;
+    padding: 0;
+  }
+}
+
+.heart-tree-clock-box.visible {
+  display: block;
+}
+
+.heart-tree-clock-label {
+  display: block;
+  color: #666;
+}
+
+.heart-tree-clock {
+  margin-left: 0;
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .heart-tree-clock {
+    margin-left: 48px;
+    text-align: left;
+  }
+}
+
+.heart-tree-clock .digit {
+  font-size: 36px;
+}
+
+@media (min-width: 900px) {
+  .heart-tree-clock .digit {
+    font-size: 64px;
+  }
+}

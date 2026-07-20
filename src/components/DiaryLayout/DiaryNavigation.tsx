@@ -43,7 +43,7 @@ const DiaryNavigation: React.FC<DiaryNavigationProps> = ({ diaries, currentId, o
               aria-current={active ? 'page' : undefined}
               className={`block rounded-xl border px-4 py-3 transition-all focus:outline-none focus:ring-2 focus:ring-rose-300 ${
                 active
-                  ? 'border-rose-300 bg-rose-50 shadow-sm dark:border-rose-700 dark:bg-rose-950/30'
+                  ? 'border-white/70 bg-gradient-to-br from-white/80 to-rose-100/50 font-medium text-rose-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_6px_20px_rgba(244,63,94,0.12)] ring-1 ring-rose-200/50 backdrop-blur-md dark:border-rose-400/20 dark:from-rose-950/40 dark:to-rose-900/20 dark:text-rose-200'
                   : 'border-gray-200 bg-white hover:border-rose-200 hover:bg-rose-50/40 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-rose-700 dark:hover:bg-rose-950/20'
               }`}
             >
